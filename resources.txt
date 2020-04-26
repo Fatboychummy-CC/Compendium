@@ -1,0 +1,3 @@
+all:
+main.lua,https://raw.githubusercontent.com/fatboychummy/Compendium-Of-Software/master/main.lua
+resources.txt,https://raw.githubusercontent.com/fatboychummy/Compendium-Of-Software/master/resources.txt
