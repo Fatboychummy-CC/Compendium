@@ -65,6 +65,7 @@
       * [ ] Player toggleable
       * [ ] Enemy toggleable
       * [ ] Master switch
+    * [ ] Max Range setting
     * [ ] Possibly maybe determine if the shot will shoot itself
 * [ ] + Entity Sensor & Chat bot
   * [ ] Turret Status
