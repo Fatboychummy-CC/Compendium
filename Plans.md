@@ -9,56 +9,140 @@
 
 # Packages:
 ## Any:
-* [ ] Dependency checking
+* [ ] Util:
+  * [ ] Base methods:
+    * [ ] `closestString(<table, string>, [maxOffBy=?, minDifference=?)`
+      * [ ] Takes a table of strings and a string, returns the closest match (if possible)
+      * [ ] If `maxOffBy` specified, the closest match must be within `maxOffBy` offset.
+      * [ ] If `minDifference` specified, the closest match must be closer than `minDifference` than any other string.
+
+* [ ] Performance:
+  * [ ] Base methods:
+    * [ ] `run(<function>)`
+      * [ ] `pcall`s a function
+      * [ ] Returns bool isError, string errorMessage, number timeRan
+
+* [ ] Package:
+  * [ ] Base methods:
+    * [ ] `load(<package>)`
+      * [ ] Loads a package (insert into active packages list)
+      * [ ] If package is not installed, install it (and ensure dependencies installed)
+    * [ ] `unload(<package>)`
+      * [ ] Unloads a package (removes it from active packages list)
+    * [ ] `reload(<package>)`
+      * [ ] Unloads a package, then loads it.
+    * [ ] `pause(<package>)`
+      * [ ] Pauses a package's execution.
+    * [ ] `play(<package>)`
+      * [ ] Starts a package's execution.
+    * [ ] `update(<package>, [force=false])`
+      * [ ] Checks for updates for a single package, asks user to confirm if there is.
+      * [ ] If `force`, update without confirmation.
+    * [ ] `updateAll(<package>, [force=false])`
+      * [ ] Checks for updates for all packages, asks user to confirm if there is.
+      * [ ] If `force`, update without confirmation.
+    * [ ] `run()`
+      * [ ] Runs all packages (using Raisin?)
+      * [ ] Stops packages that are marked as unloaded
+
+* [ ] Core:
+  * [ ] Base methods:
+    * [ ] `getResources([refresh=false])`
+      * [ ] If refresh, downloads the `resources.txt` file.
+      * [ ] Returns the parsed resources file (containing dependencies and etc.)
+    * [ ] `reinstall()`
 
 ### Any Inventory:
-* [ ] Caching
-  * [ ] Registration of inventories to be monitored
-    * [ ] Registration of items within said inventories
-  * [ ] Edit Registration
-  * [ ] Remove Registration
+* [ ] Base methods:
+* [ ] `find(<item id, damage, count>, [from=nil], [passTo=nil])`
+  * [ ] Finds an item by it's item id and damage.
+  * [ ] Optionally pass argument `from` to only search in that inventory.
+  * [ ] Optionally pass argument `passTo` to pass items found to that inventory.
+  * [ ] overload `find(<item name, count>, [from=nil], [passTo=nil])`
+    * [ ] Uses the cache to determine item id and damage from item name.
 
-### T:E data collection
-* [ ] T:E Energy Cell
-  * [ ] Data collector which collects current level, max level, difference since last check, time since last check, time to 0 or full (seconds).
-* [ ] + Modem
-  * [ ] Transmit information from data collector
-* [ ] + Advanced? Monitor
-  * [ ] Display information from data collector
+* [ ] Caching
+  * [ ] methods:
+    * [ ] `getName(<item id, damage>)`
+      * [ ] Returns the name of an item from it's item id and damage.
+    * [ ] `getInfo(<item name>)`
+      * [ ] Returns the item id and damage of an item from it's name.
+    * [ ] `registerItem(<item id, damage, item name>)`
+      * [ ] Registers an item into the cache.
+      * [ ] If the item already exists, edit the current value.
+    * [ ] `removeItem(<item id, damage>)`
+      * [ ] Removes an item from the cache.
+    * [ ] `clear()`
+      * [ ] Removes everything from the cache.
+      * [ ] Only used for debug?
+
+### T:E
+* [ ] Data collection program
+  * [ ] T:E Energy Cell
+    * [ ] Data collector which collects current level, max level, difference since last check, time since last check, time to 0 or full (seconds).
+  * [ ] + Modem
+    * [ ] Transmit information from data collector
+  * [ ] + Advanced? Monitor
+    * [ ] Display information from data collector
 
 ### Chat Recorder
-* [ ] Chat Recorder
-  * [ ] Basic chat functionality
+* [ ] Base methods:
+  * [ ] `parseString(<string>)`
+    * [ ] Parses each argument
+    * [ ] Parses each flag
+    * [ ] Returns table of args and flags
+  * [ ] `listen()`
+    * [ ] If configured, listen solely for a certain player via `chat_capture` events
+    * [ ] Else, listen for anything via `chat_message` events.
+    * [ ] Returns the string message received, and the player who said it.
+  * [ ] `tell(<string>)`
+    * [ ] If bound, tell the player something
+    * [ ] Error if no bind
+  * [ ] `say(<string>)`
+    * [ ] If bound, say something
+    * [ ] Error if no bind
+
+* [ ] Chat Bot program
   * [ ] Commands:
-    * [ ] Argument parsing
-    * [ ] Flag parsing
     * [ ] `help [command]` command which gets information about a command and tells the player.
     * [ ] `run <lua code>` command which runs lua code (maybe sandboxed?) and tells result to player.
     * [ ] `math <problem>` command which determines the result of a math problem (should be fun to make).
     * [ ] `register <keycode>` command to register yourself as the owner of the chat recorder (used once).
     * [ ] `pattern <pattern>` command to set the match pattern (default `"^;"`).
-    * [ ] `config <key, val>` command (`settings.set(key, val)`)
-* [ ] + Introspection Module (bound)
-  * [ ] Automatic registration of owner.
-  * [ ] Commands:
-    * [ ] `find <item name>, [inv/count], [count]` to find if an item (or a certain amount of items) is in an inventory
-      * [ ] `-g` to transfer found items to self.
-    * [ ] `transfer <item name, count, to>, [from]` to transfer items between self/enderchest/armor slots.
-      * [ ] If `from` is specified, only search inventory `from`, else search all available.
-    * [ ] `get <inv>` to get contents of inventory.
-      * [ ] `-g` to transfer all items to self.
-* [ ] + Other Inventory
-  * [ ] Commands:
-    * [ ] `transfer <item name, count, from, to>` to transfer items between inventories.
+    * [ ] `config <key, val>` command (`settings.set(key, val)`).
+    * [ ] `loaded` command to list loaded modules.
+    * [ ] `load <name>` command to load a module.
+    * [ ] `unload <name>` command to unload a module.
+  * [ ] + Introspection Module (bound)
+    * [ ] Automatic registration of owner.
+    * [ ] Commands:
+      * [ ] `find <item name>, [inv/count], [count]` to find if an item (or a certain amount of items) is in an inventory
+        * [ ] `-g` to transfer found items to self.
+      * [ ] `transfer <item name, count, to>, [from]` to transfer items between self/enderchest/armor slots.
+        * [ ] If `from` is specified, only search inventory `from`, else search all available.
+      * [ ] `get <inv>` to get contents of inventory.
+        * [ ] `-g` to transfer all items to self.
+  * [ ] + Other Inventory
+    * [ ] Commands:
+      * [ ] `transfer <item name, count, from, to>` to transfer items between inventories.
 
 ### Entity Sensor
-* [ ] Get all entities
-  * [ ] Determine if player, hostile, or unknown
-  * [ ] Calculate distance between self and entity
-* [ ] Add or remove entities from hostiles list
+* [ ] Base methods:
+  * [ ] `getEntities()`
+    * [ ] Senses
+    * [ ] For each entity, check if it's a enemy/other
+    * [ ] Calculate distance between self and entity
+  * [ ] `getEntitiesRaw()`
+    * [ ] returns the base sensor info
+  * [ ] `addHostile(<entity name>)`
+    * [ ] adds a hostile to list.
+  * [ ] `removeHostile(<entity name>)`
+    * [ ] removes hostile from list.
 
 ### Laser Beam
-* [ ] fireAt method which takes a block offset and calculates whatever is needed, then fires.
+* [ ] Base methods:
+  * [ ] `aimAt(<vector3>)` which takes a block offset and returns the direction needed to aim
+  * [ ] `fireAt(<vector3>)` which takes a block offset and calculates the aim, then fires.
 * [ ] + Entity Sensor
   * [ ] Turret
     * [ ] Toggleable in UI
