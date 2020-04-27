@@ -8,7 +8,7 @@ local information = {
   _VERSION = "0.0.3",
   _BUILD = 3,
   _UPDATE_INFO = "This is an example of the update notes that may be displayed when attempting to update."
-}
+} 
 local tArg = ...
 if tArg then
   return information
