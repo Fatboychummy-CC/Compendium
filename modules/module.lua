@@ -48,6 +48,7 @@ end
 
 -- Download file
 local function download(from, to)
+  print("Downloading...")
   local h, err = http.get(from)
   if h then
     local data = h.readAll()
@@ -61,6 +62,7 @@ local function download(from, to)
   else
     error(string.format("Failed to connect to '%s' due to '%s'.", tostring(from), tostring(err)), 2)
   end
+  print("Done.")
 end
 
 -- deep copy function, for protection of resources.
@@ -137,7 +139,7 @@ function module.update(mod, force)
     local currentInfo = loadfile(p.saveas)(true)
     if netInfo._BUILD > currentInfo._BUILD then
       print(string.format(
-        "--------------\nCurrent version: %s\nUpdated version: %s\nUpdate notes: %s",
+        "--------------\nCurrent version: %s\nUpdated version: %s\n\nUpdate notes: %s",
         currentInfo._VERSION,
         netInfo._VERSION,
         netInfo._UPDATE_INFO
