@@ -138,6 +138,12 @@ function module.update(mod, force)
       if force then
         doMove(tempFileN, p.saveas)
       else
+        print(string.format(
+          "Current version: %s\nUpdated version: %s\nUpdate notes: %s",
+          currentInfo._VERSION,
+          netInfo._VERSION,
+          netInfo._UPDATE_INFO
+        ))
         local ans = request(
           string.format("Would you like to update file '%s'?", p.saveas),
           "Please answer yes or no.",
