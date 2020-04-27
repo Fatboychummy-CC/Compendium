@@ -36,9 +36,10 @@ hey it was renamed *and* moved this time. neat
     * [ ] `updateAll(<package>, [force=false])`
       * [ ] Checks for updates for all packages, asks user to confirm if there is.
       * [ ] If `force`, update without confirmation.
-    * [ ] `run()`
-      * [ ] Runs all packages (using Raisin?)
-      * [ ] Stops packages that are marked as unloaded
+    * [x] `get([package])`
+      * [x] Get information about a package (or all packages)
+    * [x] `getDependencies(<package>)`
+      * [x] Get dependencies (recursively) about a package.
 
 * [ ] Core:
   * [ ] Base methods:
