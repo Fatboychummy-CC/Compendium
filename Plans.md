@@ -29,6 +29,8 @@
       * [ ] If package is not installed, install it (and ensure dependencies installed)
     * [ ] `unload(<package>)`
       * [ ] Unloads a package (removes it from active packages list)
+    * [ ] `remove(<package>)`
+      * [ ] Removes a package
     * [ ] `reload(<package>)`
       * [ ] Unloads a package, then loads it.
     * [ ] `pause(<package>)`
@@ -49,8 +51,13 @@
   * [ ] Base methods:
     * [ ] `getResources([refresh=false])`
       * [ ] If refresh, downloads the `resources.txt` file.
-      * [ ] Returns the parsed resources file (containing dependencies and etc.)
+      * [ ] Returns a copy of the parsed resources file (containing dependencies and etc.)
     * [ ] `reinstall()`
+      * [ ] Stop all packages
+      * [ ] Remove all packages and `resources.txt`
+      * [ ] Redownload `main.lua`
+      * [ ] Reboot with just `main.lua`
+      
 
 ### Any Inventory:
 * [ ] Base methods:
