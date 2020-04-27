@@ -9,6 +9,7 @@
 6. [ ] Run packages
 
 ***resources.txt renamed to resources.lua***
+hey it was renamed *and* moved this time. neat
 
 # Packages:
 ## Any:
