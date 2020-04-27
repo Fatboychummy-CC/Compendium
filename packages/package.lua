@@ -14,16 +14,16 @@ if tArg then
   return information
 end
 
-local packages = {
+local modules = {
   ["main"] = {
     saveas = "/main.lua",
     location = "https://raw.githubusercontent.com/fatboychummy/Compendium/master/main.lua",
     depends = {},
     t = "all"
   },
-  ["packageManager"] = {
-    saveas = "/packages/package.lua"
-    location = "https://raw.githubusercontent.com/fatboychummy/Compendium/master/packages/package.lua"
+  ["moduleManager"] = {
+    saveas = "/modules/module.lua",
+    location = "https://raw.githubusercontent.com/fatboychummy/Compendium/master/modules/module.lua",
     depends = {},
     t = "all"
   }
@@ -51,37 +51,38 @@ local function dCopy(x)
 end
 
 -- Stuff that is returned
-local package = {}
+local module = {}
 
--- clone information about a package (or all packages)
-function package.get(pack)
-  if pack then
+-- clone information about a module (or all modules)
+function module.get(mod)
+  if mod then
     -- grab only one
-    return dCopy(packages[pack])
+    return dCopy(modules[mod])
   end
   -- else grab all
-  return dCopy(packages)
+  return dCopy(modules)
 end
 
--- get dependencies for a package
-function package.getDependencies(pack)
-  -- if the package exists
-  if packages[pack] then
+-- get dependencies for a module
+function module.getDependencies(mod)
+  -- if the module exists
+  if modules[mod] then
     -- get the dependencies
-    local cdepends = dCopy(packages[pack].depends)
+    local cdepends = dCopy(modules[mod].depends)
     local depends = {}
 
     -- get the dependencies' dependencies
     for i = 1, #cdepends do
-      depends[cdepends[i]] = package.getDependencies(cdepends[i])
+      depends[cdepends[i]] = module.getDependencies(cdepends[i])
     end
 
     -- return them
     return depends
   end
 
-  -- no package
-  error(string.format("No package %s in storage.", tostring(pack), 2)
+  -- no module
+  error(string.format("No module %s in storage.", tostring(mod)), 2)
+end
 end
 
-return package
+return module
