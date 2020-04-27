@@ -1,11 +1,14 @@
 # Main:
 
 1. [x] Determine system type (command, pocket, turtle, advanced?)
-2. [ ] Determine what 'packages' are available to system type
-3. [ ] Allow user to choose package(s) to run
-  3. [ ] Auto-determine best package(s) but allow package(s) to be changed?
-4. [ ] Install said package(s) or auto-update them (disableable by user).
-5. [ ] Run packages
+2. [ ] Ensure resources.txt is up-to-date.
+3. [ ] Determine what 'packages' are available to system type
+4. [ ] Allow user to choose package(s) to run
+  4. [ ] Auto-determine best package(s) but allow package(s) to be changed?
+5. [ ] Install said package(s) or auto-update them (disableable by user).
+6. [ ] Run packages
+
+***resources.txt renamed to resources.lua***
 
 # Packages:
 ## Any:
@@ -15,6 +18,8 @@
       * [ ] Takes a table of strings and a string, returns the closest match (if possible)
       * [ ] If `maxOffBy` specified, the closest match must be within `maxOffBy` offset.
       * [ ] If `minDifference` specified, the closest match must be closer than `minDifference` than any other string.
+    * [ ] `md5(<string>)`
+      * [ ] Calculate md5 hash of a string.
 
 * [ ] Performance:
   * [ ] Base methods:
