@@ -122,7 +122,6 @@ end
 local function doMove(tempFile, saveTo)
   fs.delete(saveTo)
   fs.move(tempFile, saveTo)
-  fs.delete(tempFile)
 end
 -- update a module
 function module.update(mod, force)
@@ -156,6 +155,7 @@ function module.update(mod, force)
         end
       end
     end
+    fs.delete(tempFileN)
   else
     error(string.format("Module '%s' does not exist!", tostring(mod)), 2)
   end
