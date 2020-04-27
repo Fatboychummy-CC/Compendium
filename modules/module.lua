@@ -83,6 +83,5 @@ function module.getDependencies(mod)
   -- no module
   error(string.format("No module %s in storage.", tostring(mod)), 2)
 end
-end
 
 return module
