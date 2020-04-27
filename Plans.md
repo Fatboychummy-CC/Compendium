@@ -43,9 +43,8 @@ hey it was renamed *and* moved this time. neat
 
 * [ ] Core:
   * [ ] Base methods:
-    * [ ] `getResources([refresh=false])`
-      * [ ] If refresh, downloads the `resources.txt` file.
-      * [ ] Returns a copy of the parsed resources file (containing dependencies and etc.)
+    * [ ] `getPackages()`
+      * [ ] Downloads the `package.lua` file.
     * [ ] `reinstall()`
       * [ ] Stop all packages
       * [ ] Remove all packages and `resources.txt`
