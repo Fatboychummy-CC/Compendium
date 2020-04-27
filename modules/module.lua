@@ -7,7 +7,7 @@
 local information = {
   _VERSION = "0.0.3",
   _BUILD = 3,
-  _UPDATE_INFO = ""
+  _UPDATE_INFO = "This is an example of the update notes that may be displayed when attempting to update."
 }
 local tArg = ...
 if tArg then
@@ -42,6 +42,7 @@ local function request(question, wrong, answers)
         return input
       end
     end
+    flag = true
   end
 end
 
@@ -121,6 +122,7 @@ end
 local function doMove(tempFile, saveTo)
   fs.delete(saveTo)
   fs.move(tempFile, saveTo)
+  fs.delete(tempFile)
 end
 -- update a module
 function module.update(mod, force)
@@ -129,7 +131,7 @@ function module.update(mod, force)
          or type(mod) == "string" and module.get(mod)
          or error(string.format("Bad argument #1, expected string or table, got %s", type(mod)))
   if p then
-    local tempFileN = string.format("/.temp%d", math.random(1, 100000))
+    local tempFileN = string.format("/temp/download%d", math.random(1, 100000))
     fs.delete(tempFileN)
     download(p.location, tempFileN)
     local netInfo = loadfile(tempFileN)(true)
@@ -139,7 +141,7 @@ function module.update(mod, force)
         doMove(tempFileN, p.saveas)
       else
         print(string.format(
-          "Current version: %s\nUpdated version: %s\nUpdate notes: %s",
+          "--------------\nCurrent version: %s\nUpdated version: %s\nUpdate notes: %s",
           currentInfo._VERSION,
           netInfo._VERSION,
           netInfo._UPDATE_INFO
