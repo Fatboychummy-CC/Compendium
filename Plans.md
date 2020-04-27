@@ -1,6 +1,6 @@
 # Main:
 
-1. [ ] Determine system type (command, pocket, turtle, advanced?)
+1. [x] Determine system type (command, pocket, turtle, advanced?)
 2. [ ] Determine what 'packages' are available to system type
 3. [ ] Allow user to choose package(s) to run
   3. [ ] Auto-determine best package(s) but allow package(s) to be changed?
