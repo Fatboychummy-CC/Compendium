@@ -9,7 +9,7 @@ local packages = {
     depends = {}
   },
   ["resources.lua"] = {
-    location = "https://raw.githubusercontent.com/fatboychummy/Compendium/master/resources.lua"
+    location = "https://raw.githubusercontent.com/fatboychummy/Compendium/master/packages/package.lua"
     depends = {}
   }
 }
