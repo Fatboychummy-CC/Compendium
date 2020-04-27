@@ -57,7 +57,7 @@
       * [ ] Remove all packages and `resources.txt`
       * [ ] Redownload `main.lua`
       * [ ] Reboot with just `main.lua`
-      
+
 
 ### Any Inventory:
 * [ ] Base methods:
