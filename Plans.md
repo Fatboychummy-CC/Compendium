@@ -29,7 +29,7 @@ hey it was renamed *and* moved this time. neat
       * [ ] Returns bool isError, string errorMessage, number timeRan
 
 * [ ] Package:
-  * [ ] Base methods:
+  ~~* [ ] Base methods:
     * [ ] `load(<package>)`
       * [ ] Loads a package (insert into active packages list)
       * [ ] If package is not installed, install it (and ensure dependencies installed)
@@ -42,7 +42,7 @@ hey it was renamed *and* moved this time. neat
     * [ ] `pause(<package>)`
       * [ ] Pauses a package's execution.
     * [ ] `play(<package>)`
-      * [ ] Starts a package's execution.
+      * [ ] Starts a package's execution.~~ -- These to be handled by main.lua
     * [ ] `update(<package>, [force=false])`
       * [ ] Checks for updates for a single package, asks user to confirm if there is.
       * [ ] If `force`, update without confirmation.
