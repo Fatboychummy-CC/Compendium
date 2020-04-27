@@ -15,12 +15,14 @@ if tArg then
 end
 
 local packages = {
-  ["main.lua"] = {
+  ["main"] = {
+    saveas = "/main.lua",
     location = "https://raw.githubusercontent.com/fatboychummy/Compendium/master/main.lua",
     depends = {},
     t = "all"
   },
-  ["resources.lua"] = {
+  ["packageManager"] = {
+    saveas = "/packages/package.lua"
     location = "https://raw.githubusercontent.com/fatboychummy/Compendium/master/packages/package.lua"
     depends = {},
     t = "all"
