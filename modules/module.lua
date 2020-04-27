@@ -136,15 +136,15 @@ function module.update(mod, force)
     local netInfo = loadfile(tempFileN)(true)
     local currentInfo = loadfile(p.saveas)(true)
     if netInfo._BUILD > currentInfo._BUILD then
+      print(string.format(
+        "--------------\nCurrent version: %s\nUpdated version: %s\nUpdate notes: %s",
+        currentInfo._VERSION,
+        netInfo._VERSION,
+        netInfo._UPDATE_INFO
+      ))
       if force then
         doMove(tempFileN, p.saveas)
       else
-        print(string.format(
-          "--------------\nCurrent version: %s\nUpdated version: %s\nUpdate notes: %s",
-          currentInfo._VERSION,
-          netInfo._VERSION,
-          netInfo._UPDATE_INFO
-        ))
         local ans = request(
           string.format("Would you like to update file '%s'?", p.saveas),
           "Please answer yes or no.",
@@ -156,6 +156,7 @@ function module.update(mod, force)
       end
     end
     fs.delete(tempFileN)
+    print("Done.")
   else
     error(string.format("Module '%s' does not exist!", tostring(mod)), 2)
   end
