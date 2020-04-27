@@ -6,11 +6,13 @@
 local packages = {
   ["main.lua"] = {
     location = "https://raw.githubusercontent.com/fatboychummy/Compendium/master/main.lua",
-    depends = {}
+    depends = {},
+    t = "all"
   },
   ["resources.lua"] = {
     location = "https://raw.githubusercontent.com/fatboychummy/Compendium/master/packages/package.lua"
-    depends = {}
+    depends = {},
+    t = "all"
   }
 }
 
