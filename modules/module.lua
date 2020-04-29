@@ -139,7 +139,10 @@ function module.update(mod, force)
     local currentInfo = loadfile(p.saveas)(true)
     if netInfo._BUILD > currentInfo._BUILD then
       print(string.format(
-        "--------------\nCurrent version: %s\nUpdated version: %s\n\nUpdate notes: %s",
+        "--------------\n"
+        .. "Current version: %s\n"
+        .. "Updated version: %s\n\n"
+        .. "Update notes: %s",
         currentInfo._VERSION,
         netInfo._VERSION,
         netInfo._UPDATE_INFO
