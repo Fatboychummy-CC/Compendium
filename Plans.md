@@ -30,9 +30,9 @@ hey it was renamed *and* moved this time. neat
 
 * [ ] Package:
   * [ ] Base methods:
-    * [ ] `update(<package>, [force=false])`
-      * [ ] Checks for updates for a single package, asks user to confirm if there is.
-      * [ ] If `force`, update without confirmation.
+    * [x] `update(<package>, [force=false])`
+      * [x] Checks for updates for a single package, asks user to confirm if there is.
+      * [x] If `force`, update without confirmation.
     * [ ] `updateAll(<package>, [force=false])`
       * [ ] Checks for updates for all packages, asks user to confirm if there is.
       * [ ] If `force`, update without confirmation.
