@@ -9,7 +9,7 @@ local information = {
   _UPDATE_INFO = ""
 }
 local tArg = ...
-if tArg then
+if tArg == "INFO" then
   return information
 end
 

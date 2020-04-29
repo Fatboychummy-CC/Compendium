@@ -10,7 +10,7 @@ local information = {
   _UPDATE_INFO = "This is an example of the update notes that may be displayed when attempting to update."
 }
 local tArg = ...
-if tArg then
+if tArg == "INFO" then
   return information
 end
 
@@ -135,8 +135,8 @@ function module.update(mod, force)
     local tempFileN = string.format("/temp/download%d", math.random(1, 100000))
     fs.delete(tempFileN)
     download(p.location, tempFileN)
-    local netInfo = loadfile(tempFileN)(true)
-    local currentInfo = loadfile(p.saveas)(true)
+    local netInfo = loadfile(tempFileN)("INFO")
+    local currentInfo = loadfile(p.saveas)("INFO")
     if netInfo._BUILD > currentInfo._BUILD then
       print(string.format(
         "--------------\n"
