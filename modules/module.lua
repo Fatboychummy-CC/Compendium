@@ -5,8 +5,8 @@
 
 -- if we are running this file with arguments, we're checking for updates.
 local information = {
-  _VERSION = "0.0.5",
-  _BUILD = 5,
+  _VERSION = "0.0.6",
+  _BUILD = 6,
   _UPDATE_INFO = "This is an example of the update notes that may be displayed when attempting to update."
 }
 local tArg = ...
@@ -120,12 +120,14 @@ function module.getDependencies(mod)
   error(string.format("No module %s in storage.", tostring(mod)), 2)
 end
 
-
+-- swap a file.
 local function doMove(tempFile, saveTo)
   fs.delete(saveTo)
   fs.move(tempFile, saveTo)
 end
+
 -- update a module
+-- returns true if the module is ok
 function module.update(mod, force)
   -- determine if a module was passed or a string name of module was passed
   local p = type(mod) == "table" and mod
@@ -159,11 +161,23 @@ function module.update(mod, force)
           doMove(tempFileN, p.saveas)
         end
       end
+    else
+      fs.delete(tempFileN)
+      return true
     end
     fs.delete(tempFileN)
     print("Done.")
   else
     error(string.format("Module '%s' does not exist!", tostring(mod)), 2)
+  end
+end
+
+function module.updateAll(force)
+  for k, v in pairs(modules) do
+    print(string.format("----------\nModule: %s", k))
+    if module.update(k, force) then
+      print("Module OK.")
+    end
   end
 end
 
