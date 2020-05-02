@@ -19,20 +19,22 @@ local isWriting = false
 local logLevel = 1 -- 1 = all, 2 = exclude info/other, 3 = exclude warn/info/other
 local file
 local logFolder = "/logs/"
-local latest = logFolder .. "Latest.log"
+local latest = logFolder .. "Latest"
+local ext = ".log"
 
 local function box(box, info)
   return string.format("[%s]: %s", box, info)
 end
 
-local function open()
-  if fs.exists(latest) then
-    local f = io.open(latest, 'r')
+local function open(fname)
+  if fs.exists(latest .. fname .. ext) then
+    local f = io.open(latest .. fname .. ext, 'r')
     local name = f:read("*l")
     f:close()
-    fs.move(latest, string.format(logFolder .. "%s.log", name))
+    fs.move(latest, string.format(logFolder .. "%s" .. ext, name))
   end
   file = io.open(latest, 'w')
+  file:write(os.date("%D_%T"))
 end
 
 local function close()
