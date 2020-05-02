@@ -27,14 +27,16 @@ local function box(box, info)
 end
 
 local function open(fname)
-  if fs.exists(latest .. fname .. ext) then
-    local f = io.open(latest .. fname .. ext, 'r')
+  local lname = latest .. fname .. ext
+  if fs.exists(lname) then
+    local f = io.open(lname, 'r')
     local name = f:read("*l")
     f:close()
-    fs.move(latest, string.format(logFolder .. "%s" .. ext, name))
+    fs.move(lname, string.format(logFolder .. "%s" .. ext, name))
   end
-  file = io.open(latest, 'w')
-  file:write(os.date("%D_%T"))
+  file = io.open(lname, 'w')
+  file:write(os.date("%m_%d_%y-%H_%M_%S") .. "\n")
+  file:flush()
 end
 
 local function close()
@@ -93,8 +95,8 @@ function log.err(err)
   writeLog(box("ERR ", err))
 end
 
-function log.open()
-  open()
+function log.open(fname)
+  open(fname)
 end
 
 function log.close()

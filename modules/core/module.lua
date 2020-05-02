@@ -120,14 +120,14 @@ local function installerWorker(tab, action, ignoreDependencies)
   local loc = tab.location
   local dependencies = tab.depends
   log.info("Module information:")
-  log.info(string.format("Filename: %s", save))
-  log.info(string.format("Location: %s", loc))
-  log.info(string.format("Dependencies:"))
+  log.info(string.format("  Filename: %s", save))
+  log.info(string.format("  Location: %s", loc))
+  log.info(string.format("  Dependencies:"))
   for i = 1, #dependencies do
-    log.info(string.format("  %d: %s", i, dependencies[i]))
+    log.info(string.format("    %d: %s", i, dependencies[i]))
   end
   if #dependencies == 0 then
-    log.info("  None.")
+    log.info("    None.")
   end
   if ignoreDependencies then
     log.info("*** IGNORING DEPENDENCIES ***")
