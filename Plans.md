@@ -105,6 +105,14 @@ hey it was renamed *and* moved this time. neat
   * [ ] `say(<string>)`
     * [ ] If bound, say something
     * [ ] Error if no bind
+* [ ] Event listeners:
+  * [ ] `"chat_message"`
+    * [ ] in function `listen`
+  * [ ] `"chat_capture"`
+    * [ ] in function `listen`
+* [ ] Event Generators:
+  * [ ] `"chat_parsed"`
+    * [ ] parse a chat_message or chat_capture events
 
 * [ ] Chat Bot program
   * [ ] Commands:
@@ -130,18 +138,19 @@ hey it was renamed *and* moved this time. neat
     * [ ] Commands:
       * [ ] `transfer <item name, count, from, to>` to transfer items between inventories.
 
-### Entity Sensor
+### Entity Sensor    
 * [ ] Base methods:
   * [ ] `getEntities()`
     * [ ] Senses
-    * [ ] For each entity, check if it's a enemy/other
-    * [ ] Calculate distance between self and entity
-  * [ ] `getEntitiesRaw()`
-    * [ ] returns the base sensor info
+    * [ ] `enemy` flag
+    * [ ] `distance`
   * [ ] `addHostile(<entity name>)`
     * [ ] adds a hostile to list.
   * [ ] `removeHostile(<entity name>)`
     * [ ] removes hostile from list.
+* [ ] Event generators:
+  * [ ] `"entity_scan", <number:entities>`
+    * [ ] Every time the scanner scans, generate event
 
 ### Laser Beam
 * [ ] Base methods:
@@ -174,7 +183,9 @@ hey it was renamed *and* moved this time. neat
     * [ ] `turret registerhostile <entity name>` command
   * [ ] Remove a hostile
     * [ ] `turret removehostile <entity name>` command
-
+* [ ] Event generators:
+  * [ ] `"laser_fired", <vector3:offset>`
+    * [ ] Every time the laser fires, generate event.
 
 ## Neural:
 
