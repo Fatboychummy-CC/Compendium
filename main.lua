@@ -14,8 +14,8 @@ if tArg == "INFO" then
 end
 
 -- -- Information about ourself -- --
-local mainFileLocation = "https://raw.githubusercontent.com/fatboychummy/Compendium/master/main.lua"
-local packageFileLocation = "https://raw.githubusercontent.com/fatboychummy/Compendium/master/packages/package.lua"
+local moduleFileLocation = "https://raw.githubusercontent.com/fatboychummy/Compendium/master/modules/core/module.lua"
+local moduleFileSave = "modules/core/module.lua"
 
 -- determine computer type
 local sType = "computer"

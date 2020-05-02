@@ -22,14 +22,14 @@ local modules = {
     t = "all"
   },
   ["moduleManager"] = {
-    saveas = "/modules/module.lua",
-    location = "https://raw.githubusercontent.com/fatboychummy/Compendium/master/modules/module.lua",
+    saveas = "/modules/core/module.lua",
+    location = "https://raw.githubusercontent.com/fatboychummy/Compendium/master/modules/core/module.lua",
     depends = {"logger"},
     t = "all"
   },
   ["logger"] = {
-    saveas = "/modules/logger.lua",
-    location = "https://raw.githubusercontent.com/fatboychummy/Compendium/master/modules/logger.lua",
+    saveas = "/modules/core/logger.lua",
+    location = "https://raw.githubusercontent.com/fatboychummy/Compendium/master/modules/core/logger.lua",
     depends = {},
     t = "all"
   }
