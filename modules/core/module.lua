@@ -113,13 +113,47 @@ end
 
   Uses a table of information to install, uninstall, or update a module
 ]]
-local function installerWorker(tab, action)
+local function installerWorker(tab, action, ignoreDependencies)
+  local save = tab.saveas
+  local loc = tab.location
+  local dependencies = tab.depends
+  log.info("Module information:")
+  log.info(string.format("Filename: %s", save))
+  log.info(string.format("Location: %s", loc))
+  log.info(string.format("Dependencies:"))
+  for i = 1, #dependencies do
+    log.info(string.format("  %d: %s", i, dependencies[i]))
+  end
+  if #dependencies == 0 then
+    log.info("  None.")
+  end
+  if ignoreDependencies then
+    log.info("*** IGNORING DEPENDENCIES ***")
+  end
   if action == "install" then
-
+    log.info("Selected INSTALL")
+    download(loc, save)
+    if not ignoreDependencies then
+      local rdm = math.random(1, 100000)
+      log.info(string.format("##### INSTALLING DEPENDENCIES %d #####", rdm))
+      for i = 1, #dependencies do
+        module.install(dependencies[i])
+      end
+      log.info(string.format("##### DONE DEPENDENCIES %d #####", rdm))
+    end
   elseif action == "uninstall" then
-
+    fs.delete(save)
+    if not ignoreDependencies then
+      local rdm = math.random(1, 100000)
+      log.info(string.format("##### UNINSTALLING DEPENDENCIES %d #####", rdm))
+      for i = 1, #dependencies do
+        module.uninstall(dependencies[i])
+      end
+      log.info(string.format("##### DONE DEPENDENCIES %d #####", rdm))
+    end
   elseif action == "update" then
-
+    fs.delete(save)
+    installerWorker(tab, "install", ignoreDependencies)
   end
 end
 
@@ -138,14 +172,14 @@ end
 
   Install a module
 ]]
-function module.install(mod)
+function module.install(mod, ignoreDependencies)
   if type(mod) == "table" then
     log.warn("Attempting direct installation of module.")
-    installerWorker(mod, "install")
+    installerWorker(mod, "install", ignoreDependencies)
   elseif type(mod) == "string" then
     log.info(string.format("Attempting installation of module '%s'", mod))
     local d = module.get(mod)
-    installerWorker(d, "install")
+    installerWorker(d, "install", ignoreDependencies)
   end
 end
 
