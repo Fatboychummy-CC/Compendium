@@ -35,34 +35,35 @@ local initRequired = {
   "util"
 }
 
--- Download file
-local function download(from, to, debug)
-  local function dPrint(...)
-    if debug then
-      print(...)
-    end
+local function dPrint(..., debugTo)
+  if debugTo then
+    debugTo(...)
   end
+end
 
-  dPrint(string.format("Connecting to %s...", from))
+-- Download file
+local function download(from, to, debugTo)
+
+  dPrint(string.format("Connecting to %s...", from), debugTo)
   local h, err = http.get(from)
   if h then
-    dPrint("Connected.")
+    dPrint("Connected.", debugTo)
     local data = h.readAll()
     h.close()
 
-    dPrint(string.format("Opening file %s for writing...", to))
+    dPrint(string.format("Opening file %s for writing...", to), debugTo)
     local h2, err2 = io.open(to, 'w')
     if h2 then
-      dPrint("OK. Writing...")
+      dPrint("OK. Writing...", debugTo)
       h2:write(data):close()
-      dPrint("Wrote data to file.")
+      dPrint("Wrote data to file.", debugTo)
     else
       error(string.format("Failed to open file '%s' due to '%s'.", tostring(to), tostring(err2)), 2)
     end
   else
     error(string.format("Failed to connect to '%s' due to '%s'.", tostring(from), tostring(err)), 2)
   end
-  dPrint("Done.")
+  dPrint("Done.", debugTo)
 end
 
 -- Stuff that is returned
