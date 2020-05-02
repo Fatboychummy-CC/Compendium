@@ -1,7 +1,7 @@
 # Main:
 
 1. [x] Determine system type (command, pocket, turtle, advanced?)
-2. [ ] Ensure resources.txt is up-to-date.
+2. [ ] ~~Ensure resources.txt is up-to-date.~~
 3. [ ] Determine what 'packages' are available to system type
 4. [ ] Allow user to choose package(s) to run
   4. [ ] Auto-determine best package(s) but allow package(s) to be changed?
