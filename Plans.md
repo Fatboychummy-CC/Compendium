@@ -19,8 +19,6 @@ hey it was renamed *and* moved this time. neat
       * [ ] Takes a table of strings and a string, returns the closest match (if possible)
       * [ ] If `maxOffBy` specified, the closest match must be within `maxOffBy` offset.
       * [ ] If `minDifference` specified, the closest match must be closer than `minDifference` than any other string.
-    * [ ] `md5(<string>)`
-      * [ ] Calculate md5 hash of a string.
 
 * [ ] Performance:
   * [ ] Base methods:
@@ -47,13 +45,15 @@ hey it was renamed *and* moved this time. neat
 
 * [ ] Core:
   * [ ] Base methods:
-    * [ ] `getPackages()`
-      * [ ] Downloads the `package.lua` file.
+    * [ ] `getModules()`
+      * [ ] Downloads the `module.lua` file.
     * [ ] `reinstall()`
-      * [ ] Stop all packages
-      * [ ] Remove all packages and `resources.txt`
+      * [ ] Stop all modules
+      * [ ] Remove all modules and `module.lua`
       * [ ] Redownload `main.lua`
       * [ ] Reboot with just `main.lua`
+    * [ ] `md5(<string>)`
+      * [ ] Calculate md5 hash of a string.
 
 
 ### Any Inventory:
