@@ -19,7 +19,7 @@ local isWriting = false
 local logLevel = 1 -- 1 = all, 2 = exclude info/other, 3 = exclude warn/info/other
 local file
 local logFolder = "/logs/"
-local latest = logFolder .. "Latest"
+local latest = logFolder .. "Latest_"
 local ext = ".log"
 
 local function box(box, info)
