@@ -15,7 +15,7 @@ end
 
 -- -- Information about ourself -- --
 local moduleFileLocation = "https://raw.githubusercontent.com/fatboychummy/Compendium/master/modules/core/module.lua"
-local moduleFileSave = "modules/core/module.lua"
+local moduleFileSave = "/modules/core/module.lua"
 
 -- determine computer type
 local sType = "computer"
