@@ -41,6 +41,13 @@ local initRequired = {
   "util",
 }
 
+local log = fs.exists(modules.logger.saveas) and dofile(modules.logger.saveas)
+            or {
+                 info = function() print("Logger not installed...") end
+                 warn = function() print("Logger not installed...") end
+                 err  = function() print("Logger not installed...") end
+               }
+
 -- Download file
 local function download(from, to)
   local h, err = http.get(from)
