@@ -76,7 +76,7 @@ function module.get(mod)
     return dCopy and dCopy(modules[mod]) or modules[mod]
   end
   -- else grab all
-  return dCopy and dCopy(modules) modules[mod]
+  return dCopy and dCopy(modules) or modules
 end
 
 local function dependencyWorker(mod)
