@@ -45,8 +45,10 @@ local function writeLog(info)
   if isWriting and not file then
     open()
   end
-  file:write(tostring(info) .. "\n")
-  file:flush()
+  if isWriting then
+    file:write(tostring(info) .. "\n")
+    file:flush()
+  end
 end
 
 --[[
