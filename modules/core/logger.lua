@@ -19,7 +19,7 @@ local isWriting = false
 local logLevel = 1 -- 1 = all, 2 = exclude info/other, 3 = exclude warn/info/other
 local file
 local logFolder = "/logs/"
-local latest = latest .. "Latest.log"
+local latest = logFolder .. "Latest.log"
 
 local function box(box, info)
   return string.format("[%s]: %s", box, info)
