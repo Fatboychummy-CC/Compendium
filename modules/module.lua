@@ -29,61 +29,40 @@ local modules = {
   }
 }
 
--- -- -- Utility functions which cannot be loaded externally -- -- --
-
--- get user input
-local function request(question, wrong, answers)
-  local flag = false
-  while true do
-    print(flag and wrong or question)
-    local input = string.lower(io.read())
-    for i = 1, #answers do
-      if input == answers[i] then
-        return input
-      end
-    end
-    flag = true
-  end
-end
+local initRequired = {
+  "main",
+  "moduleManager",
+  "util"
+}
 
 -- Download file
-local function download(from, to)
-  print("Downloading...")
+local function download(from, to, debug)
+  local function dPrint(...)
+    if debug then
+      print(...)
+    end
+  end
+
+  dPrint(string.format("Connecting to %s...", from))
   local h, err = http.get(from)
   if h then
+    dPrint("Connected.")
     local data = h.readAll()
     h.close()
+
+    dPrint(string.format("Opening file %s for writing...", to))
     local h2, err2 = io.open(to, 'w')
     if h2 then
+      dPrint("OK. Writing...")
       h2:write(data):close()
+      dPrint("Wrote data to file.")
     else
       error(string.format("Failed to open file '%s' due to '%s'.", tostring(to), tostring(err2)), 2)
     end
   else
     error(string.format("Failed to connect to '%s' due to '%s'.", tostring(from), tostring(err)), 2)
   end
-  print("Done.")
-end
-
--- deep copy function, for protection of resources.
-local function dCopy(x)
-  -- if we aren't copying a table, return nothing.
-  if type(x) ~= "table" then
-    return
-  end
-
-  -- otherwise continue and recursively grab everything in the table
-  local ret = {}
-  for k, v in pairs(x) do
-    if type(v) == "table" then
-      -- if we find another table, recurse into it
-      ret[k] = dCopy(v)
-    else
-      -- otherwise set whatever the value is to our value
-      ret[k] = v
-    end
-  end
-  return ret
+  dPrint("Done.")
 end
 
 -- Stuff that is returned
@@ -120,65 +99,14 @@ function module.getDependencies(mod)
   error(string.format("No module %s in storage.", tostring(mod)), 2)
 end
 
--- swap a file.
-local function doMove(tempFile, saveTo)
-  fs.delete(saveTo)
-  fs.move(tempFile, saveTo)
-end
-
 -- update a module
 -- returns true if the module is ok
 function module.update(mod, force)
-  -- determine if a module was passed or a string name of module was passed
-  local p = type(mod) == "table" and mod
-         or type(mod) == "string" and module.get(mod)
-         or error(string.format("Bad argument #1, expected string or table, got %s", type(mod)))
-  if p then
-    local tempFileN = string.format("/temp/download%d", math.random(1, 100000))
-    fs.delete(tempFileN)
-    download(p.location, tempFileN)
-    local netInfo = loadfile(tempFileN)("INFO")
-    local currentInfo = loadfile(p.saveas)("INFO")
-    if netInfo._BUILD > currentInfo._BUILD then
-      print(string.format(
-        "--------------\n"
-        .. "Current version: %s\n"
-        .. "Updated version: %s\n\n"
-        .. "Update notes: %s",
-        currentInfo._VERSION,
-        netInfo._VERSION,
-        netInfo._UPDATE_INFO
-      ))
-      if force then
-        doMove(tempFileN, p.saveas)
-      else
-        local ans = request(
-          string.format("Would you like to update file '%s'?", p.saveas),
-          "Please answer yes or no.",
-          {"yes", "no", "y", "n"}
-        )
-        if ans == "y" or ans == "yes" then
-          doMove(tempFileN, p.saveas)
-        end
-      end
-    else
-      fs.delete(tempFileN)
-      return true
-    end
-    fs.delete(tempFileN)
-    print("Done.")
-  else
-    error(string.format("Module '%s' does not exist!", tostring(mod)), 2)
-  end
+
 end
 
 function module.updateAll(force)
-  for k, v in pairs(modules) do
-    print(string.format("----------\nModule: %s", k))
-    if module.update(k, force) then
-      print("Module OK.")
-    end
-  end
+
 end
 
 return module
