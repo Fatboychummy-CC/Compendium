@@ -73,27 +73,35 @@ local module = {}
 function module.get(mod)
   if mod then
     -- grab only one
-    return dCopy(modules[mod])
+    return dCopy and dCopy(modules[mod]) or modules[mod]
   end
   -- else grab all
-  return dCopy(modules)
+  return dCopy and dCopy(modules) modules[mod]
 end
 
+local function dependencyWorker(mod)
+  -- get the dependencies
+  local cdepends = dCopy(modules[mod].depends)
+  local depends = {}
+
+  -- get the dependencies' dependencies
+  for i = 1, #cdepends do
+    depends[cdepends[i]] = module.getDependencies(cdepends[i])
+  end
+
+  -- return them
+  return depends
+end
 -- get dependencies for a module
 function module.getDependencies(mod)
-  -- if the module exists
-  if modules[mod] then
-    -- get the dependencies
-    local cdepends = dCopy(modules[mod].depends)
-    local depends = {}
 
-    -- get the dependencies' dependencies
-    for i = 1, #cdepends do
-      depends[cdepends[i]] = module.getDependencies(cdepends[i])
+  if type(mod) == "table" then
+    return dependencyWorker(mod)
+  elseif type(mod) == "string" then
+    -- if the module exists
+    if modules[mod] then
+      return dependencyWorker(modules[mod])
     end
-
-    -- return them
-    return depends
   end
 
   -- no module
