@@ -100,6 +100,21 @@ function module.getDependencies(mod)
   error(string.format("No module %s in storage.", tostring(mod)), 2)
 end
 
+--[[
+  installerWorker <table:module>, <string:action["install","uninstall","update"]>
+
+  Uses a table of information to install, uninstall, or update a module
+]]
+local function installerWorker(tab, action)
+  if action == "install" then
+
+  elseif action == "uninstall" then
+
+  elseif action == "update" then
+
+  end
+end
+
 -- update a module
 -- returns true if the module is ok
 function module.update(mod)
@@ -111,23 +126,34 @@ function module.updateAll()
 end
 
 --[[
-  installerWorker <table:module>, <string:action["install","uninstall"]>
-  Uses a table of information to install or uninstall a module
-]]
-local function installerWorker(tab, action)
-
-end
-
---[[
   install <table:module/string:module_name>
+
   Install a module
 ]]
 function module.install(mod)
   if type(mod) == "table" then
-    installerWorker(tab, "install")
+    log.warn("Attempting direct installation of module.")
+    installerWorker(mod, "install")
   elseif type(mod) == "string" then
+    log.info(string.format("Attempting installation of module '%s'", mod))
     local d = module.get(mod)
-    installerWorker(d, mod)
+    installerWorker(d, "install")
+  end
+end
+
+--[[
+  uninstall <table:module/string:module_name>
+
+  Uninstalls a module
+]]
+function module.uninstall(mod)
+  if type(mod) == "table" then
+    log.warn("Attempting direct uninstallation of module.")
+    installerWorker(mod, "uninstall")
+  elseif type(mod) == "string" then
+    log.info(string.format("Attempting uninstallation of module '%s'", mod))
+    local d = module.get(mod)
+    installerWorker(d, "uninstall")
   end
 end
 
