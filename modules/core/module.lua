@@ -103,13 +103,24 @@ function module.updateAll()
 
 end
 
-local function installerWorker(mod, action)
+--[[
+  installerWorker <table:module>, <string:action["install","uninstall"]>
+  Uses a table of information to install or uninstall a module
+]]
+local function installerWorker(tab, action)
 
 end
 
+--[[
+  install <table:module/string:module_name>
+  Install a module
+]]
 function module.install(mod)
   if type(mod) == "table" then
+    installerWorker(tab, "install")
   elseif type(mod) == "string" then
+    local d = module.get(mod)
+    installerWorker(d, mod)
   end
 end
 
