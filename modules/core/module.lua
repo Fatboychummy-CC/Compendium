@@ -81,7 +81,7 @@ end
 
 local function dependencyWorker(mod)
   -- get the dependencies
-  local cdepends = dCopy(modules[mod].depends)
+  local cdepends = dCopy and dCopy(modules[mod].depends) or modules[mod].depends
   local depends = {}
 
   -- get the dependencies' dependencies
