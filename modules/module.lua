@@ -24,7 +24,7 @@ local modules = {
   ["moduleManager"] = {
     saveas = "/modules/module.lua",
     location = "https://raw.githubusercontent.com/fatboychummy/Compendium/master/modules/module.lua",
-    depends = {},
+    depends = {"logger"},
     t = "all"
   }
 }
@@ -32,38 +32,25 @@ local modules = {
 local initRequired = {
   "main",
   "moduleManager",
-  "util"
+  "util",
 }
 
-local function dPrint(..., debugTo)
-  if debugTo then
-    debugTo(...)
-  end
-end
-
 -- Download file
-local function download(from, to, debugTo)
-
-  dPrint(string.format("Connecting to %s...", from), debugTo)
+local function download(from, to)
   local h, err = http.get(from)
   if h then
-    dPrint("Connected.", debugTo)
     local data = h.readAll()
     h.close()
 
-    dPrint(string.format("Opening file %s for writing...", to), debugTo)
     local h2, err2 = io.open(to, 'w')
     if h2 then
-      dPrint("OK. Writing...", debugTo)
       h2:write(data):close()
-      dPrint("Wrote data to file.", debugTo)
     else
       error(string.format("Failed to open file '%s' due to '%s'.", tostring(to), tostring(err2)), 2)
     end
   else
     error(string.format("Failed to connect to '%s' due to '%s'.", tostring(from), tostring(err)), 2)
   end
-  dPrint("Done.", debugTo)
 end
 
 -- Stuff that is returned
@@ -102,12 +89,22 @@ end
 
 -- update a module
 -- returns true if the module is ok
-function module.update(mod, force)
+function module.update(mod)
 
 end
 
-function module.updateAll(force)
+function module.updateAll()
 
+end
+
+local function installerWorker(mod, action)
+
+end
+
+function module.install(mod)
+  if type(mod) == "table" then
+  elseif type(mod) == "string" then
+  end
 end
 
 return module
