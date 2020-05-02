@@ -26,6 +26,12 @@ local modules = {
     location = "https://raw.githubusercontent.com/fatboychummy/Compendium/master/modules/module.lua",
     depends = {"logger"},
     t = "all"
+  },
+  ["logger"] = {
+    saveas = "/modules/logger.lua",
+    location = "https://raw.githubusercontent.com/fatboychummy/Compendium/master/modules/logger.lua",
+    depends = {},
+    t = "all"
   }
 }
 
