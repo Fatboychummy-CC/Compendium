@@ -5,9 +5,9 @@
 
 -- if we are running this file with arguments, we're checking for updates.
 local information = {
-  _VERSION = "0.0.6",
-  _BUILD = 6,
-  _UPDATE_INFO = "This is an example of the update notes that may be displayed when attempting to update."
+  _VERSION = "0.0.7",
+  _BUILD = 7,
+  _UPDATE_INFO = "Logging."
 }
 local tArg = ...
 if tArg == "INFO" then
@@ -198,6 +198,21 @@ function module.uninstall(mod)
     log.info(string.format("Attempting uninstallation of module '%s'", mod))
     local d = module.get(mod)
     installerWorker(d, "uninstall")
+  end
+end
+
+--[[
+  setLogStatus <boolean:on/off>
+
+  Sets the logging status
+]]
+function module.setLogStatus(tf, level)
+  level = level or 1
+  if tf then
+    log.open("module")
+    log.logLevel(level)
+  else
+    log.close()
   end
 end
 
