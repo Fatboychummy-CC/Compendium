@@ -21,8 +21,10 @@ local file
 local logFolder = "/logs/"
 local latest = logFolder .. "Latest_"
 local ext = ".log"
+local lastLen = 0
 
 local function box(box, info)
+  lastLen = #box
   return string.format("[%s]: %s", box, info)
 end
 
@@ -102,5 +104,15 @@ end
 function log.close()
   close()
 end
+
+log = setmetatable(log, {
+  __call = function(tbl, b, out)
+    if b and not out then
+      out = b
+      b = string.rep(' ', lastLen)
+    end
+    writeLog(box(b, out))
+  end
+})
 
 return log
