@@ -297,49 +297,72 @@ function module.status()
   log.info("All modules checked.")
 end
 
---[[
-  finalized module handler
-]]
-local ret = {}
+-- start init logging.
+module.setLogStatus(true, 1, "Init")
 
---[[
-  For each function in the module, collect its inputs and then pcall.
-  If error, log it, else return what would normally be returned.
-]]
-for k, v in pairs(module) do
-  if type(v) == "function" then
-    ret[k] = function(...) -- handler function
-      local inps = table.pack(...) -- pack inputs
-      local dat = table.pack(pcall(v, table.unpack(inps, 1, inps.n))) -- pcall origin func
+local function clone()
+  --[[
+    finalized module handler
+  ]]
+  local ret = {}
 
-      -- if ok
-      if dat[1] then
-        return table.unpack(dat, 2, dat.n)
+  --[[
+    For each function in the module, collect its inputs and then pcall.
+    If error, log it, else return what would normally be returned.
+
+    Requires the module module, and loads the util and logger modules.
+  ]]
+
+  -- load modules (or replace them with non-erroring false-modules)
+  local util = module.load("util") or {serialize = function() print("Failed to load util module") end}
+  local log = module.load("logger") or setmetatable({
+       info  = function() print("Logger not installed...") end,
+       warn  = function() print("Logger not installed...") end,
+       err   = function() print("Logger not installed...") end,
+       open  = function() print("Logger not installed...") end,
+       close = function() print("Logger not installed...") end
+     }, {__call = function() print("Logger not installed...") end})
+
+  -- clone everything
+  for k, v in pairs(module) do
+    if type(v) == "function" then
+      ret[k] = function(...) -- handler function
+        local inps = table.pack(...) -- pack inputs
+        local dat = table.pack(pcall(v, table.unpack(inps, 1, inps.n))) -- pcall origin func
+
+        -- if ok
+        if dat[1] then
+          return table.unpack(dat, 2, dat.n)
+        end
+
+        -- else error occured.
+        log.err(string.format("Function call to '%s' failed.", k))
+        log(tostring(dat[2]))
+        log("DATA", "Function inputs:")
+        -- output function inputs
+        for i = 1, inps.n do
+          log(string.format("%d: %s", i, util.serialize(inps[i])))
+        end
+        -- generate error
+        error(dat[2], 2)
       end
-
-      -- else error occured.
-      log.err(string.format("Function call to '%s' failed.", k))
-      log(tostring(dat[2]))
-      log("DATA", "Function inputs:")
-      -- output function inputs
-      for i = 1, inps.n do
-        log(string.format("%d: %s", i, tostring(inps[i])))
-      end
-      -- generate error
-      error(dat[2], 2)
+    else
+      -- output the module.
+      ret[k] = v
     end
-  else
-    -- output the module.
-    ret[k] = v
   end
+
+  return ret
 end
+
+
 
 --[[
   Initial setup
 
   Install all dependencies for self.
 ]]
-ret.setLogStatus(true, 1, "Init")
+local ret = clone()
 ret.status()
 
 log.info("Checking init modules")
