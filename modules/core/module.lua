@@ -127,38 +127,39 @@ local function installerWorker(tab, action, ignoreDependencies)
   local loc = tab.location
   local dependencies = tab.depends
   log.info("Module information:")
-  log.info(string.format("  Filename: %s", save))
-  log.info(string.format("  Location: %s", loc))
-  log.info(string.format("  Dependencies:"))
+  log(string.format("  Filename: %s", save))
+  log(string.format("  Location: %s", loc))
+  log(string.format("  Dependencies:"))
   for i = 1, #dependencies do
-    log.info(string.format("    %d: %s", i, dependencies[i]))
+    log(string.format("    %d: %s", i, dependencies[i]))
   end
   if #dependencies == 0 then
-    log.info("    None.")
+    log("    None.")
   end
   if ignoreDependencies then
-    log.info("*** IGNORING DEPENDENCIES ***")
+    log("*** IGNORING DEPENDENCIES ***")
   end
   if action == "install" then
     log.info("Selected INSTALL")
     download(loc, save)
     if not ignoreDependencies then
       local rdm = math.random(1, 100000)
-      log.info(string.format("##### INSTALLING DEPENDENCIES %d #####", rdm))
+      log(string.format("##### INSTALLING DEPENDENCIES %d #####", rdm))
       for i = 1, #dependencies do
         module.install(dependencies[i])
       end
-      log.info(string.format("##### DONE DEPENDENCIES %d #####", rdm))
+      log(string.format("##### DONE DEPENDENCIES %d #####", rdm))
     end
   elseif action == "uninstall" then
+    log.info("Selected UNINSTALL")
     fs.delete(save)
     if not ignoreDependencies then
       local rdm = math.random(1, 100000)
-      log.info(string.format("##### UNINSTALLING DEPENDENCIES %d #####", rdm))
+      log(string.format("##### UNINSTALLING DEPENDENCIES %d #####", rdm))
       for i = 1, #dependencies do
         module.uninstall(dependencies[i])
       end
-      log.info(string.format("##### DONE DEPENDENCIES %d #####", rdm))
+      log(string.format("##### DONE DEPENDENCIES %d #####", rdm))
     end
   elseif action == "update" then
     fs.delete(save)
@@ -213,14 +214,79 @@ end
 
   Sets the logging status
 ]]
-function module.setLogStatus(tf, level)
+function module.setLogStatus(tf, level, ext)
   level = level or 1
+  ext = ext or ""
   if tf then
-    log.open("module")
+    log.open(ext and string.format("module-%s", ext) or "module")
     log.logLevel(level)
+    log.setWriting(true)
+    log.info("Started logging.")
   else
     log.close()
   end
 end
 
+--[[
+  status
+
+  updates the status of all modules.
+]]
+function module.status()
+  log.info("Module status check started.")
+  for k, v in pairs(modules) do
+    log("STAT", string.format("  %s:", tostring(k)))
+    if fs.exists(v.saveas) then
+      log("    Installed.")
+      local vFunc, err = loadfile(v.saveas)
+      if not vFunc then
+        local str =
+        log.err(string.format(
+          "Failed to load file '%s'.",
+          tostring(v.saveas)
+        ))
+        log("  " .. tostring(err))
+        error(string.format(
+          "Failed to load file '%s' due to '%s'.",
+          tostring(v.saveas),
+          tostring(err)
+        ))
+      end
+      local vData = vFunc("INFO")
+      log(string.format("    Version: %s", vData._VERSION))
+      log(string.format("    Build #: %d", vData._BUILD))
+      v.version = vData._VERSION
+      v.build = vData._BUILD
+      v.installed = true
+    else
+      log("    Not installed.")
+      v.installed = false
+    end
+  end
+  log.info("All modules checked.")
+end
+
+--[[
+  Initial setup
+
+  Install all dependencies for self.
+]]
+module.setLogStatus(true, 1, "Init")
+module.status()
+
+log.info("Checking init modules")
+for i = 1, #initRequired do
+  log("CHCK", initRequired[i])
+  local d = module.get(initRequired[i])
+  if not d.installed then
+    log("  Not installed.  Installing.")
+    log("  ---------------------------")
+    module.install(d)
+    log("  Done")
+  else
+    log("Installed.")
+  end
+end
+
+module.setLogStatus(false)
 return module
