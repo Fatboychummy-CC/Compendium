@@ -222,6 +222,30 @@ function module.uninstall(mod)
   end
 end
 
+local function loader(tab)
+  if tab.saveas and fs.exists(tab.saveas) then
+    return dofile(tab.saveas)
+  else
+    log.warn("Failed to load.")
+  end
+end
+
+--[[
+  load <module>
+
+  loads a module much like require, but doesn't need paths.  Just names.
+]]
+function module.load(mod)
+  if type(mod) == "table" then
+    log.warn("Attempting direct load of module.")
+    return loader(mod)
+  elseif type(mod) == "string" then
+    log.info(string.format("Attempting to load module '%s'.", mod))
+    local d = module.get(mod)
+    return loader(d)
+  end
+end
+
 --[[
   setLogStatus <boolean:on/off>
 
