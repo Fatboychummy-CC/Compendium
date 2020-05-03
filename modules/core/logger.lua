@@ -22,6 +22,7 @@ local logFolder = "/logs/"
 local latest = logFolder .. "Latest_"
 local ext = ".log"
 local lastLen = 0
+local lastLevel = 1
 
 local function box(box, info)
   lastLen = #box
@@ -82,19 +83,22 @@ function log.logLevel(level)
 end
 
 function log.info(info)
-  if logLevel < 2 then
+  if logLevel == 1 then
     writeLog(box("INFO", info))
   end
+  lastLevel = 1
 end
 
 function log.warn(warn)
   if logLevel < 3 then
     writeLog(box("WARN", warn))
   end
+  lastLevel = 2
 end
 
 function log.err(err)
   writeLog(box("ERR ", err))
+  lastLevel = 3
 end
 
 function log.open(fname)
@@ -106,12 +110,17 @@ function log.close()
 end
 
 log = setmetatable(log, {
-  __call = function(tbl, b, out)
+  __call = function(tbl, b, out, manualLevel)
     if b and not out then
       out = b
       b = string.rep(' ', lastLen)
     end
-    writeLog(box(b, out))
+    if manualLevel then
+      lastLevel = manualLevel
+    end
+    if lastLevel >= logLevel then
+      writeLog(box(b, out))
+    end
   end
 })
 
