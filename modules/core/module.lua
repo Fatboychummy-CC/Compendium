@@ -160,11 +160,11 @@ local function installerWorker(tab, action, ignoreDependencies)
     end
     if not ignoreDependencies then
       local rdm = math.random(1, 100000)
-      log(string.format("##### INSTALLING DEPENDENCIES %d #####", rdm))
+      log("DPND", string.format("##### INSTALLING DEPENDENCIES %d #####", rdm))
       for i = 1, #dependencies do
         module.install(dependencies[i])
       end
-      log(string.format("#####    DONE DEPENDENCIES    %d #####", rdm))
+      log("DPND", string.format("#####    DONE DEPENDENCIES    %d #####", rdm))
     end
   elseif action == "uninstall" then
     log.info("Selected UNINSTALL")
@@ -175,11 +175,11 @@ local function installerWorker(tab, action, ignoreDependencies)
     installerWorker(tab, "install", ignoreDependencies)
     if not ignoreDependencies then
       local rdm = math.random(1, 100000)
-      log(string.format("##### UPDATING DEPENDENCIES %d #####", rdm))
+      log("DPND", string.format("##### UPDATING DEPENDENCIES %d #####", rdm))
       for i = 1, #dependencies do
         module.update(dependencies[i])
       end
-      log(string.format("#####   DONE DEPENDENCIES   %d #####", rdm))
+      log("DPND", string.format("#####   DONE DEPENDENCIES   %d #####", rdm))
     end
   end
 end
