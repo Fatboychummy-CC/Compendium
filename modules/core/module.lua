@@ -248,12 +248,6 @@ function module.status()
       log("    Installed.")
       local vFunc, err = loadfile(v.saveas)
       if not vFunc then
-        local str =
-        log.err(string.format(
-          "Failed to load file '%s'.",
-          tostring(v.saveas)
-        ))
-        log("  " .. tostring(err))
         error(string.format(
           "Failed to load file '%s' due to '%s'.",
           tostring(v.saveas),
@@ -275,20 +269,58 @@ function module.status()
 end
 
 --[[
+  finalized module handler
+]]
+local ret = {}
+
+--[[
+  For each function in the module, collect its inputs and then pcall.
+  If error, log it, else return what would normally be returned.
+]]
+for k, v in pairs(module) do
+  if type(v) == "function" then
+    ret[k] = function(...) -- handler function
+      local inps = table.pack(...) -- pack inputs
+      local dat = table.pack(pcall(v, table.unpack(inps, 1, inps.n))) -- pcall origin func
+
+      -- if ok
+      if dat[1] then
+        return table.unpack(dat, 2, dat.n)
+      end
+
+      -- else error occured.
+      log.err(string.format("Function call to '%s' failed.", k))
+      log(tostring(dat[2]))
+      log("DATA", "Function inputs:")
+      -- output function inputs
+      for i = 1, inps.n do
+        log(string.format("%d: %s", i, tostring(inps[i])))
+      end
+      -- generate error
+      error(dat[2], 2)
+    end
+  else
+    -- output the module.
+    ret[k] = v
+  end
+end
+
+--[[
   Initial setup
 
   Install all dependencies for self.
 ]]
-module.setLogStatus(true, 1, "Init")
-module.status()
+ret.setLogStatus(true, 1, "Init")
+ret.status()
 
 log.info("Checking init modules")
 for i = 1, #initRequired do
   log("CHCK", initRequired[i], 1)
-  local d = module.get(initRequired[i])
-  module.install(d)
-  log(initRequired[i] .. " complete.")
+  local d = ret.get(initRequired[i])
+  ret.install(d)
+  log("DONE", initRequired[i] .. " complete.", 1)
+  log("")
 end
 
-module.setLogStatus(false)
-return module
+ret.setLogStatus(false)
+return ret
