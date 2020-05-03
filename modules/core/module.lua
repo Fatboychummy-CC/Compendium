@@ -348,7 +348,7 @@ local function clone()
         log("DATA", "Function inputs:")
         -- output function inputs
         for i = 1, inps.n do
-          log(string.format("%d: %s", i, util and util.serialize(inps[i]) or "Util not installed!"))
+          log(string.format("%d: %s", i, util and util.simpleSerialize(inps[i]) or "Util not installed!"))
         end
         -- generate error
         error(dat[2], 2)
