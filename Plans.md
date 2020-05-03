@@ -26,14 +26,14 @@ hey it was renamed *and* moved this time. neat
       * [ ] `pcall`s a function
       * [ ] Returns bool isError, string errorMessage, number timeRan
 
-* [ ] Package:
-  * [ ] Base methods:
-    * [ ] `update(<package>, [force=false])`
-      * [ ] Checks for updates for a single package, asks user to confirm if there is.
-      * [ ] If `force`, update without confirmation.
-    * [ ] `updateAll(<package>, [force=false])`
-      * [ ] Checks for updates for all packages, asks user to confirm if there is.
-      * [ ] If `force`, update without confirmation.
+* [x] Package:
+  * [x] Base methods:
+    * [x] `update(<package>, [force=false])`
+      * [x] Checks for updates for a single package, asks user to confirm if there is.
+      * [x] If `force`, update without confirmation.
+    * [x] `updateAll(<package>, [force=false])`
+      * [x] Checks for updates for all packages, asks user to confirm if there is.
+      * [x] If `force`, update without confirmation.
     * [x] `get([package])`
       * [x] Get information about a package (or all packages)
     * [x] `getDependencies(<package>)`
