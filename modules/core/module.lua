@@ -5,8 +5,8 @@
 
 -- if we are running this file with arguments, we're checking for updates.
 local information = {
-  _VERSION = "0.0.7",
-  _BUILD = 7,
+  _VERSION = "0.0.8",
+  _BUILD = 8,
   _UPDATE_INFO = "Logging."
 }
 local tArg = ...
