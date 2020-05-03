@@ -306,8 +306,8 @@ local function clone()
   ]]
 
   -- load modules (or replace them with non-erroring false-modules)
-  local util = module.load("util") or {serialize = function() print("Failed to load util module") end}
-  local log = module.load("logger") or setmetatable({
+  local util = util or module.load("util") or {serialize = function() print("Failed to load util module") end}
+  local log = log or module.load("logger") or setmetatable({
        info  = function() print("Logger not installed...") end,
        warn  = function() print("Logger not installed...") end,
        err   = function() print("Logger not installed...") end,
