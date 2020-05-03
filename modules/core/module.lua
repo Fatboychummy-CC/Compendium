@@ -166,14 +166,6 @@ local function installerWorker(tab, action, ignoreDependencies)
   elseif action == "uninstall" then
     log.info("Selected UNINSTALL")
     fs.delete(save)
-    if not ignoreDependencies then
-      local rdm = math.random(1, 100000)
-      log(string.format("##### UNINSTALLING DEPENDENCIES %d #####", rdm))
-      for i = 1, #dependencies do
-        module.uninstall(dependencies[i])
-      end
-      log(string.format("##### DONE DEPENDENCIES %d #####", rdm))
-    end
   elseif action == "update" then
     fs.delete(save)
     installerWorker(tab, "install", ignoreDependencies)
