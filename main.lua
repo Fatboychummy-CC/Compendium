@@ -37,7 +37,7 @@ end
   Core init.
   Init globals and locals which modules have access to (Too lazy to make a different way)
 ]]
-local module = fs.exists(moduleFileSave) and require(moduleFileSave:sub(1, -5)) or getModules()
+local module = fs.exists(moduleFileSave) and require(moduleFileSave:sub(1, -5))
 --[[
   getModules
 
@@ -61,3 +61,5 @@ function _G.getModules()
   end
   return module and module.load
 end
+
+getModules()

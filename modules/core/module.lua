@@ -46,7 +46,7 @@ local initRequired = {
   "main",
   "moduleManager",
 }
-local lastCheck = -1
+local lastCheck = -1000
 
 local log = fs.exists(modules.logger.saveas) and dofile(modules.logger.saveas)
             or setmetatable(
