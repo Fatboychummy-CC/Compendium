@@ -1,6 +1,7 @@
 --[[
   logger.lua
-  Contains locations of all required files.
+
+  Logs stuff
 ]]
 
 -- if we are running this file with arguments, we're checking for updates.
