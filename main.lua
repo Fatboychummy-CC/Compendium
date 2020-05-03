@@ -37,8 +37,7 @@ end
   Core init.
   Init globals and locals which modules have access to (Too lazy to make a different way)
 ]]
-local module = require(moduleFileSave:sub(1, -5))
-
+local module = fs.exists(moduleFileSave) and require(moduleFileSave:sub(1, -5)) or getModules()
 --[[
   getModules
 
@@ -53,9 +52,12 @@ function _G.getModules()
       h.close()
       local h2 = io.open(moduleFileSave, 'w')
       h2:write(dat):close()
+      print("Main module has been installed, rebooting.")
+      os.sleep(3)
+      os.reboot()
     else
       error(string.format("Failed to get file from %s", moduleFileLocation))
     end
   end
-  return module.load
+  return module and module.load
 end

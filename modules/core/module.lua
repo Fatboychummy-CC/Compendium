@@ -55,10 +55,12 @@ local log = fs.exists(modules.logger.saveas) and dofile(modules.logger.saveas)
                  warn   = function() print("Logger not installed...") end,
                  err    = function() print("Logger not installed...") end,
                  open   = function() print("Logger not installed...") end,
-                 close  = function() print("Logger not installed...") end
+                 close  = function() print("Logger not installed...") end,
+                 logLevel = function() end,
+                 setWriting = function() end
                },
                {
-                 __call = function() print("Logger not installed...") end
+                 __call = function() print("Logger not installed...") end,
                }
              )
 local util = fs.exists(modules.util.saveas) and dofile(modules.util.saveas)
@@ -382,12 +384,23 @@ local ret = clone()
 ret.status()
 
 log.info("Checking init modules")
+local installFlag = false
 for i = 1, #initRequired do
   log("CHCK", initRequired[i], 1)
   local d = ret.get(initRequired[i])
+  if not d.installed then
+    installFlag = true
+  end
   ret.install(d)
   log("DONE", initRequired[i] .. " complete.", 1)
   log("")
+end
+if installFlag then
+  print("We've installed some new core modules and need to reboot.")
+  log.warn("New core modules installed, rebooting.")
+  ret.setLogStatus(false)
+  os.sleep(3)
+  os.reboot()
 end
 
 ret.setLogStatus(false)
