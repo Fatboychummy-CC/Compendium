@@ -47,13 +47,18 @@ local initRequired = {
 }
 
 local log = fs.exists(modules.logger.saveas) and dofile(modules.logger.saveas)
-            or {
-                 info  = function() print("Logger not installed...") end,
-                 warn  = function() print("Logger not installed...") end,
-                 err   = function() print("Logger not installed...") end,
-                 open  = function() print("Logger not installed...") end,
-                 close = function() print("Logger not installed...") end
+            or setmetatable(
+               {
+                 info   = function() print("Logger not installed...") end,
+                 warn   = function() print("Logger not installed...") end,
+                 err    = function() print("Logger not installed...") end,
+                 open   = function() print("Logger not installed...") end,
+                 close  = function() print("Logger not installed...") end
+               },
+               {
+                 __call = function() print("Logger not installed...") end
                }
+             )
 local util = fs.exists(modules.util.saveas) and dofile(modules.util.saveas)
              or {}
 
