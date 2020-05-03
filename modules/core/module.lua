@@ -46,6 +46,7 @@ local initRequired = {
   "main",
   "moduleManager",
 }
+local lastCheck = -1
 
 local log = fs.exists(modules.logger.saveas) and dofile(modules.logger.saveas)
             or setmetatable(
@@ -281,6 +282,10 @@ end
 ]]
 function module.status()
   log.info("Module status check started.")
+  if lastCheck + 5 > os.clock() then
+    log("Module status check aborted, status check was recently completed.")
+    return
+  end
   for k, v in pairs(modules) do
     log("STAT", string.format("  %s:", tostring(k)))
     if fs.exists(v.saveas) then
@@ -305,6 +310,7 @@ function module.status()
     end
   end
   log.info("All modules checked.")
+  lastCheck = os.clock()
 end
 
 local function clone()
