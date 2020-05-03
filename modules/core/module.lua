@@ -60,7 +60,6 @@ local log = fs.exists(modules.logger.saveas) and dofile(modules.logger.saveas)
                }
              )
 local util = fs.exists(modules.util.saveas) and dofile(modules.util.saveas)
-             or {}
 
 -- Download file
 local function download(from, to)
@@ -87,10 +86,10 @@ local module = {}
 function module.get(mod)
   if mod then
     -- grab only one
-    return util.dCopy and util.dCopy(modules[mod]) or modules[mod]
+    return util and util.dCopy(modules[mod]) or modules[mod]
   end
   -- else grab all
-  return util.dCopy and util.dCopy(modules) or modules
+  return util and util.dCopy(modules) or modules
 end
 
 local function dependencyWorker(mod)
