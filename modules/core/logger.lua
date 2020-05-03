@@ -1,5 +1,5 @@
 --[[
-  Resources.lua
+  logger.lua
   Contains locations of all required files.
 ]]
 
