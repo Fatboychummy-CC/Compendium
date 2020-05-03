@@ -54,4 +54,16 @@ function util.simpleSerialize(tbl)
   return str
 end
 
+function util.dCopy(x)
+  local ret = {}
+  for k, v in pairs(x) do
+    if type(v) == "table" then
+      ret[k] = util.dCopy(v)
+    else
+      ret[k] = v
+    end
+  end
+  return ret
+end
+
 return util
