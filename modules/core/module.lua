@@ -123,13 +123,16 @@ end
   Uses a table of information to install, uninstall, or update a module
 ]]
 local function installerWorker(tab, action, ignoreDependencies)
+  module.status()
   local save = tab.saveas
   local loc = tab.location
   local dependencies = tab.depends
+  local installed = tab.installed
   log.info("Module information:")
-  log(string.format("  Filename: %s", save))
-  log(string.format("  Location: %s", loc))
-  log(string.format("  Dependencies:"))
+  log(string.format("  Filename     : %s", save))
+  log(string.format("  Location     : %s", loc))
+  log(string.format("  Is installed?: %s", installed and "Yes" or "No"))
+  log(string.format("  Dependencies :"))
   for i = 1, #dependencies do
     log(string.format("    %d: %s", i, dependencies[i]))
   end
@@ -141,7 +144,12 @@ local function installerWorker(tab, action, ignoreDependencies)
   end
   if action == "install" then
     log.info("Selected INSTALL")
-    download(loc, save)
+    if not installed then
+      log("Not installed, installing.")
+      download(loc, save)
+    else
+      log("Already installed.")
+    end
     if not ignoreDependencies then
       local rdm = math.random(1, 100000)
       log(string.format("##### INSTALLING DEPENDENCIES %d #####", rdm))
@@ -276,16 +284,10 @@ module.status()
 
 log.info("Checking init modules")
 for i = 1, #initRequired do
-  log("CHCK", initRequired[i])
+  log("CHCK", initRequired[i], 1)
   local d = module.get(initRequired[i])
-  if not d.installed then
-    log("  Not installed.  Installing.")
-    log("  ---------------------------")
-    module.install(d)
-    log("  Done")
-  else
-    log("Installed.")
-  end
+  module.install(d)
+  log(initRequired[i] .. " complete.")
 end
 
 module.setLogStatus(false)
