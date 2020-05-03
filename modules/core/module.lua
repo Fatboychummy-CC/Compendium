@@ -136,6 +136,7 @@ local function installerWorker(tab, action, ignoreDependencies)
   local loc = tab.location
   local dependencies = tab.depends
   local installed = tab.installed
+  local didAction = false
   log.info("Module information:")
   log(string.format("  Filename     : %s", save))
   log(string.format("  Location     : %s", loc))
@@ -155,6 +156,7 @@ local function installerWorker(tab, action, ignoreDependencies)
     if not installed then
       log("Not installed, installing.")
       download(loc, save)
+      didAction = true
     else
       log("Already installed.")
     end
@@ -162,26 +164,28 @@ local function installerWorker(tab, action, ignoreDependencies)
       local rdm = math.random(1, 100000)
       log("DPND", string.format("##### INSTALLING DEPENDENCIES %d #####", rdm))
       for i = 1, #dependencies do
-        module.install(dependencies[i])
+        didAction = didAction or module.install(dependencies[i])
       end
       log("DPND", string.format("#####    DONE DEPENDENCIES    %d #####", rdm))
     end
   elseif action == "uninstall" then
     log.info("Selected UNINSTALL")
     fs.delete(save)
+    didAction = true
   elseif action == "update" then
     log.info("Selected UPDATE")
     fs.delete(save)
-    installerWorker(tab, "install", ignoreDependencies)
+    didAction = installerWorker(tab, "install", ignoreDependencies)
     if not ignoreDependencies then
       local rdm = math.random(1, 100000)
       log("DPND", string.format("##### UPDATING DEPENDENCIES %d #####", rdm))
       for i = 1, #dependencies do
-        module.update(dependencies[i])
+        didAction = didAction or module.update(dependencies[i])
       end
       log("DPND", string.format("#####   DONE DEPENDENCIES   %d #####", rdm))
     end
   end
+  return didAction
 end
 
 -- update a module
@@ -189,11 +193,11 @@ end
 function module.update(mod, ignoreDependencies)
   if type(mod) == "table" then
     log.warn("Attempting direct update of module.")
-    installerWorker(mod, "update", ignoreDependencies)
+    return installerWorker(mod, "update", ignoreDependencies)
   elseif type(mod) == "string" then
     log.info(string.format("Attempting update of module '%s'", mod))
     local d = module.get(mod)
-    installerWorker(d, "update", ignoreDependencies)
+    return installerWorker(d, "update", ignoreDependencies)
   end
 end
 
@@ -211,11 +215,11 @@ end
 function module.install(mod, ignoreDependencies)
   if type(mod) == "table" then
     log.warn("Attempting direct installation of module.")
-    installerWorker(mod, "install", ignoreDependencies)
+    return installerWorker(mod, "install", ignoreDependencies)
   elseif type(mod) == "string" then
     log.info(string.format("Attempting installation of module '%s'", mod))
     local d = module.get(mod)
-    installerWorker(d, "install", ignoreDependencies)
+    return installerWorker(d, "install", ignoreDependencies)
   end
 end
 
@@ -227,11 +231,11 @@ end
 function module.uninstall(mod)
   if type(mod) == "table" then
     log.warn("Attempting direct uninstallation of module.")
-    installerWorker(mod, "uninstall")
+    return installerWorker(mod, "uninstall")
   elseif type(mod) == "string" then
     log.info(string.format("Attempting uninstallation of module '%s'", mod))
     local d = module.get(mod)
-    installerWorker(d, "uninstall")
+    return installerWorker(d, "uninstall")
   end
 end
 
@@ -387,11 +391,7 @@ log.info("Checking init modules")
 local installFlag = false
 for i = 1, #initRequired do
   log("CHCK", initRequired[i], 1)
-  local d = ret.get(initRequired[i])
-  if not d.installed then
-    installFlag = true
-  end
-  ret.install(d)
+  installFlag = ret.install(initRequired[i])
   log("DONE", initRequired[i] .. " complete.", 1)
   log("")
 end
