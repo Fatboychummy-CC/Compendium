@@ -305,14 +305,14 @@ local function clone()
   ]]
 
   -- load modules (or replace them with non-erroring false-modules)
-  local util = util or module.load("util") or {serialize = function() print("Failed to load util module") end}
   local log = log or module.load("logger") or setmetatable({
-       info  = function() print("Logger not installed...") end,
-       warn  = function() print("Logger not installed...") end,
-       err   = function() print("Logger not installed...") end,
-       open  = function() print("Logger not installed...") end,
-       close = function() print("Logger not installed...") end
-     }, {__call = function() print("Logger not installed...") end})
+    info  = function() print("Logger not installed...") end,
+    warn  = function() print("Logger not installed...") end,
+    err   = function() print("Logger not installed...") end,
+    open  = function() print("Logger not installed...") end,
+    close = function() print("Logger not installed...") end
+  }, {__call = function() print("Logger not installed...") end})
+  local util = util or module.load("util")
 
   -- clone everything
   for k, v in pairs(module) do
@@ -332,7 +332,7 @@ local function clone()
         log("DATA", "Function inputs:")
         -- output function inputs
         for i = 1, inps.n do
-          log(string.format("%d: %s", i, util.serialize(inps[i])))
+          log(string.format("%d: %s", i, util and util.serialize(inps[i]) or "Util not installed!"))
         end
         -- generate error
         error(dat[2], 2)
