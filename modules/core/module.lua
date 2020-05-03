@@ -160,25 +160,43 @@ local function installerWorker(tab, action, ignoreDependencies)
       for i = 1, #dependencies do
         module.install(dependencies[i])
       end
-      log(string.format("##### DONE DEPENDENCIES %d #####", rdm))
+      log(string.format("#####    DONE DEPENDENCIES    %d #####", rdm))
     end
   elseif action == "uninstall" then
     log.info("Selected UNINSTALL")
     fs.delete(save)
   elseif action == "update" then
+    log.info("Selected UPDATE")
     fs.delete(save)
     installerWorker(tab, "install", ignoreDependencies)
+    if not ignoreDependencies then
+      local rdm = math.random(1, 100000)
+      log(string.format("##### UPDATING DEPENDENCIES %d #####", rdm))
+      for i = 1, #dependencies do
+        module.update(dependencies[i])
+      end
+      log(string.format("#####   DONE DEPENDENCIES   %d #####", rdm))
+    end
   end
 end
 
 -- update a module
 -- returns true if the module is ok
-function module.update(mod)
-
+function module.update(mod, ignoreDependencies)
+  if type(mod) == "table" then
+    log.warn("Attempting direct update of module.")
+    installerWorker(mod, "update", ignoreDependencies)
+  elseif type(mod) == "string" then
+    log.info(string.format("Attempting update of module '%s'", mod))
+    local d = module.get(mod)
+    installerWorker(d, "update", ignoreDependencies)
+  end
 end
 
 function module.updateAll()
-
+  for k, v in pairs(modules) do
+    module.update(k, true)
+  end
 end
 
 --[[
@@ -288,9 +306,6 @@ function module.status()
   log.info("All modules checked.")
 end
 
--- start init logging.
-module.setLogStatus(true, 1, "Init")
-
 local function clone()
   --[[
     finalized module handler
@@ -353,6 +368,9 @@ end
 
   Install all dependencies for self.
 ]]
+-- start init logging.
+module.setLogStatus(true, 1, "Init")
+
 local ret = clone()
 ret.status()
 
