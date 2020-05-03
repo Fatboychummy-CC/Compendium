@@ -24,12 +24,18 @@ local modules = {
   ["moduleManager"] = {
     saveas = "/modules/core/module.lua",
     location = "https://raw.githubusercontent.com/fatboychummy/Compendium/master/modules/core/module.lua",
-    depends = {"logger"},
+    depends = {"logger", "util"},
     t = "all"
   },
   ["logger"] = {
     saveas = "/modules/core/logger.lua",
     location = "https://raw.githubusercontent.com/fatboychummy/Compendium/master/modules/core/logger.lua",
+    depends = {},
+    t = "all"
+  },
+  ["util"] = {
+    saveas = "/modules/core/util.lua",
+    location = "https://raw.githubusercontent.com/fatboychummy/Compendium/master/modules/core/util.lua",
     depends = {},
     t = "all"
   }
@@ -38,7 +44,6 @@ local modules = {
 local initRequired = {
   "main",
   "moduleManager",
-  "util",
 }
 
 local log = fs.exists(modules.logger.saveas) and dofile(modules.logger.saveas)
@@ -49,6 +54,8 @@ local log = fs.exists(modules.logger.saveas) and dofile(modules.logger.saveas)
                  open  = function() print("Logger not installed...") end,
                  close = function() print("Logger not installed...") end
                }
+local util = fs.exists(modules.util.saveas) and dofile(modules.util.saveas)
+             or {}
 
 -- Download file
 local function download(from, to)
@@ -75,10 +82,10 @@ local module = {}
 function module.get(mod)
   if mod then
     -- grab only one
-    return dCopy and dCopy(modules[mod]) or modules[mod]
+    return util.dCopy and util.dCopy(modules[mod]) or modules[mod]
   end
   -- else grab all
-  return dCopy and dCopy(modules) or modules
+  return util.dCopy and util.dCopy(modules) or modules
 end
 
 local function dependencyWorker(mod)
