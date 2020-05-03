@@ -51,16 +51,16 @@ local lastCheck = -1000
 local log = fs.exists(modules.logger.saveas) and dofile(modules.logger.saveas)
             or setmetatable(
                {
-                 info   = function() print("Logger not installed...") end,
-                 warn   = function() print("Logger not installed...") end,
-                 err    = function() print("Logger not installed...") end,
-                 open   = function() print("Logger not installed...") end,
-                 close  = function() print("Logger not installed...") end,
+                 info   = function(...) print(...) end,
+                 warn   = function(...) print(...) end,
+                 err    = function(...) print(...) end,
+                 open   = function(...) print(...) end,
+                 close  = function(...) print(...) end,
                  logLevel = function() end,
                  setWriting = function() end
                },
                {
-                 __call = function() print("Logger not installed...") end,
+                 __call = function(...) print(...) end,
                }
              )
 local util = fs.exists(modules.util.saveas) and dofile(modules.util.saveas)
@@ -330,12 +330,12 @@ local function clone()
 
   -- load modules (or replace them with non-erroring false-modules)
   local log = log or module.load("logger") or setmetatable({
-    info  = function() print("Logger not installed...") end,
-    warn  = function() print("Logger not installed...") end,
-    err   = function() print("Logger not installed...") end,
-    open  = function() print("Logger not installed...") end,
-    close = function() print("Logger not installed...") end
-  }, {__call = function() print("Logger not installed...") end})
+    info  = function(...) print(...) end,
+    warn  = function(...) print(...) end,
+    err   = function(...) print(...) end,
+    open  = function(...) print(...) end,
+    close = function(...) print(...) end
+  }, {__call = function(...) print(...) end})
   local util = util or module.load("util")
 
   -- clone everything
