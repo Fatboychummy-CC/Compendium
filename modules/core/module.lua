@@ -15,28 +15,25 @@ if tArg == "INFO" then
   return information
 end
 
+local urlPrefix = "https://raw.githubusercontent.com/Fatboychummy-CC/Compendium/master/"
 local modules = {
   ["main"] = {
     saveas = "/main.lua",
-    location = "https://raw.githubusercontent.com/fatboychummy/Compendium/master/main.lua",
     depends = {},
     t = "all"
   },
   ["moduleManager"] = {
     saveas = "/modules/core/module.lua",
-    location = "https://raw.githubusercontent.com/fatboychummy/Compendium/master/modules/core/module.lua",
     depends = {"logger", "util"},
     t = "all"
   },
   ["logger"] = {
     saveas = "/modules/core/logger.lua",
-    location = "https://raw.githubusercontent.com/fatboychummy/Compendium/master/modules/core/logger.lua",
     depends = {},
     t = "all"
   },
   ["util"] = {
     saveas = "/modules/core/util.lua",
-    location = "https://raw.githubusercontent.com/fatboychummy/Compendium/master/modules/core/util.lua",
     depends = {},
     t = "all"
   }
@@ -133,7 +130,7 @@ end
 local function installerWorker(tab, action, ignoreDependencies)
   module.status()
   local save = tab.saveas
-  local loc = tab.location
+  local loc = urlPrefix .. save:sub(2)
   local dependencies = tab.depends
   local installed = tab.installed
   local didAction = false

@@ -14,7 +14,8 @@ if tArg == "INFO" then
 end
 
 -- -- Information about ourself -- --
-local moduleFileLocation = "https://raw.githubusercontent.com/fatboychummy/Compendium/master/modules/core/module.lua"
+local urlPrefix = "https://raw.githubusercontent.com/Fatboychummy-CC/Compendium/master/"
+local moduleFileLocation = urlPrefix .. "modules/core/module.lua"
 local moduleFileSave = "/modules/core/module.lua"
 
 -- determine computer type
