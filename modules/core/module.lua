@@ -161,7 +161,7 @@ local function installerWorker(tab, action, ignoreDependencies)
       local rdm = math.random(1, 100000)
       log("DPND", string.format("##### INSTALLING DEPENDENCIES %d #####", rdm))
       for i = 1, #dependencies do
-        didAction = didAction or module.install(dependencies[i])
+        didAction = module.install(dependencies[i]) or didAction
       end
       log("DPND", string.format("#####    DONE DEPENDENCIES    %d #####", rdm))
     end
@@ -177,7 +177,7 @@ local function installerWorker(tab, action, ignoreDependencies)
       local rdm = math.random(1, 100000)
       log("DPND", string.format("##### UPDATING DEPENDENCIES %d #####", rdm))
       for i = 1, #dependencies do
-        didAction = didAction or module.update(dependencies[i])
+        didAction = module.update(dependencies[i]) or didAction
       end
       log("DPND", string.format("#####   DONE DEPENDENCIES   %d #####", rdm))
     end
@@ -388,7 +388,7 @@ log.info("Checking init modules")
 local installFlag = false
 for i = 1, #initRequired do
   log("CHCK", initRequired[i], 1)
-  installFlag = ret.install(initRequired[i])
+  installFlag = ret.install(initRequired[i]) or installFlag
   log("DONE", initRequired[i] .. " complete.", 1)
   log("")
 end
