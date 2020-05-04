@@ -6,8 +6,8 @@
 
 -- if we are running this file with arguments, we're checking for updates.
 local information = {
-  _VERSION = "0.0.3",
-  _BUILD = 3,
+  _VERSION = "0.0.4",
+  _BUILD = 4,
   _UPDATE_INFO = ""
 }
 local tArg = ...
@@ -15,114 +15,143 @@ if tArg == "INFO" then
   return information
 end
 
-local log = {}
-local isWriting = false
-local logLevel = 1 -- 1 = all, 2 = exclude info/other, 3 = exclude warn/info/other
-local file
 local logFolder = "/logs/"
-local latest = logFolder .. "Latest_"
+local latest = "LATEST"
 local ext = ".log"
-local lastLen = 0
-local lastLevel = 1
+local masterLevel = 1
+local file
+local log = {}
 
-local function box(box, info)
-  lastLen = #box
-  return string.format("[%s]: %s", box, info)
+--[[
+  writeLog
+
+  Writes a log to file.
+]]
+local function writeLog(info, level)
+  --[[
+    level == 1 and masterLevel == 1 is ok
+    level == 1 and masterLevel == 2 is not ok
+  ]]
+  if level < masterLevel then
+    return
+  end
+
+  -- open the log if it's not opened.
+  if not file then
+    log.open()
+  end
+
+  -- write the information, and flush it to the file.
+  file:write(tostring(info) .. "\n")
+  file:flush()
 end
 
-local function open(fname)
-  local lname = latest .. fname .. ext
+
+--[[
+  open()
+
+  Opens the log file for writing.
+]]
+function log.open()
+  -- if already open, close it then reopen
+  if file then
+    log.close()
+  end
+  local lname = logFolder .. latest .. ext
+
+  -- if the latest log exists
   if fs.exists(lname) then
+    -- get the time it was written
     local f = io.open(lname, 'r')
     local name = f:read("*l")
     f:close()
+    -- rename the file to be the time of writing
     fs.move(lname, string.format(logFolder .. "%s" .. ext, name))
   end
+  -- open the log and write what time it is when written
   file = io.open(lname, 'w')
   file:write(os.date("%m_%d_%y-%H_%M_%S") .. "\n")
   file:flush()
 end
 
-local function close()
-  if file then
-    file:close()
-  end
-end
-
-local function writeLog(info)
-  if isWriting and not file then
-    open()
-  end
-  if isWriting then
-    file:write(tostring(info) .. "\n")
-    file:flush()
-  end
-end
-
 --[[
-  setWriting <bool:set>
-
-  sets the writing status
-]]
-function log.setWriting(tf)
-  isWriting = tf
-end
-
---[[
-  logLevel <number:level[1,2,3]>
-
-  set the log level to 1, 2, or 3
-  1 = all
-  2 = exclude info/other
-  3 = exclude warn/info/other
-]]
-function log.logLevel(level)
-  if level == 1 or level == 2 or level == 3 then
-    logLevel = level
-    log.info(string.format("Set log level to %d", level))
-  end
-end
-
-function log.info(info)
-  if logLevel == 1 then
-    writeLog(box("INFO", info))
-  end
-  lastLevel = 1
-end
-
-function log.warn(warn)
-  if logLevel < 3 then
-    writeLog(box("WARN", warn))
-  end
-  lastLevel = 2
-end
-
-function log.err(err)
-  writeLog(box("ERR ", err))
-  lastLevel = 3
-end
-
-function log.open(fname)
-  open(fname)
-end
-
-function log.close()
   close()
+
+  Closes the log file, if the file is not opened, does nothing.
+]]
+function log.close()
+  if file then
+    writeLog("[Log]: Log exited gracefully.", 1)
+    file:close()
+    file = nil
+  end
 end
 
-log = setmetatable(log, {
-  __call = function(tbl, b, out, manualLevel)
-    if b and not out then
-      out = b
-      b = string.rep(' ', lastLen)
-    end
-    if manualLevel then
-      lastLevel = manualLevel
-    end
-    if lastLevel >= logLevel then
-      writeLog(box(b, out))
-    end
+--[[
+  setMasterLevel(<lvl:int[0,1,2,3]>)
+
+  Sets the master log level (overrides each module's log level if module log level is below)
+
+  1: info/warn/error
+  2: warn/error
+  3: error only
+]]
+function log.setMasterLevel(lvl)
+  if lvl == 1 or lvl == 2 or lvl == 3 then
+    masterLevel = lvl
   end
-})
+end
+
+local function box(module, label, line)
+  return string.format("[%s][%s]: %s", module, label, line)
+end
+
+log = setmetatable(
+  log,
+  {
+    __call = function(tbl, initName)
+      local module = {}
+      local lastLevel = 1
+      local lastLen = 0
+      local name = initName
+
+      function module.info(info)
+        lastLevel = 1
+        lastLen = 4
+        writeLog(box(name, "INFO", info), 1)
+      end
+
+      function module.warn(warn)
+        lastLevel = 2
+        lastLen = 4
+        writeLog(box(name, "WARN", warn), 2)
+      end
+
+      function module.err(err)
+        lastLevel = 3
+        lastLen = 4
+        writeLog(box(name, "ERR ", err), 3)
+      end
+
+      module = setmetatable(module, {
+        __call = function(tbl, label, line, manualLevel)
+          if label and not line then
+            line = label
+            label = string.rep(' ', lastLen)
+          end
+          if manualLevel then
+            lastLevel = manualLevel
+          end
+          lastLen = #label
+
+          writeLog(box(name, label, line), lastLevel)
+        end
+      })
+
+      module.info("Connected.")
+      return module
+    end
+  }
+)
 
 return log
