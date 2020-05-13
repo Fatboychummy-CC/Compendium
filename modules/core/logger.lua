@@ -4,7 +4,7 @@
   Logs stuff
 ]]
 
--- if we are running this file with arguments, we're checking for updates.
+-- if we are running this file with argument 'INFO', we're checking for updates.
 local information = {
   _VERSION = "0.0.4",
   _BUILD = 4,

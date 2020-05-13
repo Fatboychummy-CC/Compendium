@@ -82,8 +82,47 @@ if not get("system.initialRun") then
   log.info("Initial settings set.")
 end
 
+local function setupModule(loader, mod)
+  --[[
+    finalized module handler
+  ]]
+  local ret = {}
+
+  -- clone everything
+  for k, v in pairs(mod) do
+    if type(v) == "function" then
+      ret[k] = function(...) -- handler function
+        local inps = table.pack(...) -- pack inputs
+        local dat = table.pack(pcall(v, table.unpack(inps, 1, inps.n))) -- pcall origin func
+
+        -- if ok
+        if dat[1] then
+          return table.unpack(dat, 2, dat.n)
+        end
+
+        -- else error occured.
+        log.err(string.format("Function call to '%s' failed.", k))
+        log(tostring(dat[2]))
+        log("DATA", "Function inputs:")
+        -- output function inputs
+        for i = 1, inps.n do
+          log(string.format("%d: %s", i, util and util.simpleSerialize(inps[i]) or "Util not installed!"))
+        end
+        -- generate error
+        error(dat[2], 2)
+      end
+    else
+      -- output the module.
+      ret[k] = v
+    end
+  end
+
+  return ret
+end
+
 
 local function run()
+  local module = require("modules.core.module")
   local util = require("modules.core.util")
 
   -- determine computer type
@@ -105,7 +144,8 @@ local function run()
   -- log computer info
   log.info("Detected computer info:")
   log(string.format("  %s (%s)", sType, aFlag and "advanced" or "basic"))
-  error("Ah fuck I can't believe you've done this.")
+
+
 end
 
 local ok, err = pcall(run)
