@@ -66,4 +66,33 @@ function util.dCopy(x)
   return ret
 end
 
+--[[
+  tempCreate
+
+  Creates a temporary file and returns the name and file handle for it.
+]]
+function util.tempCreate(mode)
+  -- if the tmp folder doesnt exist, easy.
+  if not fs.isDir("/tmp/") then
+    return "/tmp/1.tmp", io.open("/tmp/1.tmp", mode)
+  end
+
+  local fname = "/tmp/%d.tmp"
+  local cname = fname:format(1)
+  local i = 1
+
+  -- iterate through each file until it no longer exists
+  repeat
+    local nomatch = false
+    if fs.exists(cname) then
+      i = i + 1
+      cname = fname:format(i)
+    else
+      nomatch = true
+    end
+  until nomatch
+
+  return cname, io.open(cname, mode)
+end
+
 return util
