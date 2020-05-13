@@ -18,6 +18,7 @@ local urlPrefix = "https://raw.githubusercontent.com/Fatboychummy-CC/Compendium/
 local loggerSave = "modules/core/logger.lua"
 local moduleSave = "modules/core/module.lua"
 local utilSave   = "modules/core/util.lua"
+local settingsSave = "/.syssettings"
 
 local requirements = {
   loggerSave,
@@ -50,7 +51,7 @@ for i = 1, #requirements do
   end
 end
 
-settings.load(".settings")
+settings.load(settingsSave)
 local logger = require("modules.core.logger")
 logger.setMasterLevel(settings.get("system.logLevel") or 1)
 local log = logger(settings.get("system.name") or "System")
@@ -76,7 +77,7 @@ if not get("system.initialRun") then
   set("system.initialRun", true)
   set("system.logLevel", 1)
   set("system.name", "System")
-  settings.save(".settings")
+  settings.save(settingsSave)
   print("Set up initial settings.")
   log.info("Initial settings set.")
 end
