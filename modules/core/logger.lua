@@ -15,7 +15,7 @@ if tArg == "INFO" then
   return information
 end
 
-local logFolder = "/logs/"
+local logFolder = fs.combine(shell.dir(), "logs")
 local latest = "LATEST"
 local ext = ".log"
 local masterLevel = 1
@@ -57,7 +57,7 @@ function log.open()
   if file then
     log.close()
   end
-  local lname = logFolder .. latest .. ext
+  local lname = fs.combine(logFolder, latest .. ext)
 
   -- if the latest log exists
   if fs.exists(lname) then
@@ -66,7 +66,7 @@ function log.open()
     local name = f:read("*l")
     f:close()
     -- rename the file to be the time of writing
-    fs.move(lname, string.format(logFolder .. "%s" .. ext, name))
+    fs.move(lname, fs.combine(logFolder, name .. ext))
   end
   -- open the log and write what time it is when written
   file = io.open(lname, 'w')
