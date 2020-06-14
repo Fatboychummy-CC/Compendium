@@ -6,8 +6,8 @@
 
 -- if we are running this file with arguments, we're checking for updates.
 local information = {
-  _VERSION = "0.0.4",
-  _BUILD = 4,
+  _VERSION = "0.0.5",
+  _BUILD = 5,
   _UPDATE_INFO = ""
 }
 local tArg = ...
@@ -42,7 +42,7 @@ local function writeLog(info, level)
   end
 
   -- write the information, and flush it to the file.
-  file:write(tostring(info) .. "\n")
+  file:write(string.format("%s%s%s%s%s", "[", os.date("%H:%M:%S"), "]", tostring(info), "\n"))
   file:flush()
 end
 
